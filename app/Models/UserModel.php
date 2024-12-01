@@ -10,9 +10,17 @@ class UserModel extends Model
 {
     use HasFactory, Notifiable;
 
+    protected $table = 'users';
+
     protected $fillable = [
-        'name',
-        'email',
+        'first_name',
+        'last_name',
+        'user_name',
         'password',
     ];
+
+    public static function getAllUsers()
+    {
+        return self::all();
+    }
 }

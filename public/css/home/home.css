@@ -1,0 +1,28 @@
+.carousel-item img {
+    height: 500px;
+    object-fit: cover;
+}
+
+.info-card {
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: contain;
+}
+
+.card.no-border {
+    border: none;
+    box-shadow: none;
+}
+
+.introduce .card p {
+    text-align: justify;
+    white-space: normal;
+}

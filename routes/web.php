@@ -8,7 +8,6 @@ Route::get('/', function () {
 });
 
 
-
 Route::group(['prefix' => 'home'], function () {
     Route::get('/', [HomeController::class, 'index'])
         ->name('home.index');
