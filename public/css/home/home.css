@@ -1,3 +1,4 @@
+@import url('../root.css');
 .carousel-item img {
     height: 500px;
     object-fit: cover;
@@ -7,7 +8,7 @@
     border: 1px solid #ddd;
     border-radius: 15px;
     padding: 20px;
-    background-color: #fff;
+    background-color: var(--white);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
@@ -26,3 +27,4 @@
     text-align: justify;
     white-space: normal;
 }
+

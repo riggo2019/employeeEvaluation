@@ -8,4 +8,6 @@
         <link rel="stylesheet" href="{{ asset("$css") }}">
     @endforeach
 @endif
+<link rel="stylesheet" href="{{ asset("/css/bootstrap/bootstrap.min.css") }}">
+<link rel="stylesheet" href="{{ asset("/css/home/style.css") }}">
 <title>Website đánh giá nhân viên</title>

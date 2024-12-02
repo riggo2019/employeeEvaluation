@@ -1,0 +1,8 @@
+:root {
+    --primary: #F58533;
+    --darker-primary: #E8670A;
+    --lighter-primary: #F9A14C;
+    --white: #fff;
+
+    --header-height: calc(2rem + 50px);
+}
