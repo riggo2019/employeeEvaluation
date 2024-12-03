@@ -12,3 +12,7 @@ header {
 .main-content {
     margin-top: var(--header-height);
 }
+
+body {
+    overflow-x: hidden;
+}
