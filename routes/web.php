@@ -11,4 +11,6 @@ Route::get('/', function () {
 Route::group(['prefix' => 'home'], function () {
     Route::get('/', [HomeController::class, 'index'])
         ->name('home.index');
+    Route::get('/translate', [HomeController::class, 'translate'])
+        ->name('home.translate');
 });

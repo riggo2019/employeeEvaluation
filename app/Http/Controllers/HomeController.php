@@ -19,12 +19,23 @@ class HomeController extends Controller
         $data['users'] = $users; 
         $data['content'] =  'home.content.home';
         $data['css_files'] = [
-            '/css/bootstrap/bootstrap.min.css',
             '/css/home/home.css',
         ];
         $data['js_files'] = [
-            '/js/bootstrap/bootstrap.min.js',
             '/js/home/slider.js',
+        ];
+        return view('home/index', $data);
+    }
+
+    public function translate() {
+        $users = UserModel::getAllUsers();
+
+        $data['content'] =  'home.content.translate';
+        $data['css_files'] = [
+            '/css/home/form.css',
+        ];
+        $data['js_files'] = [
+            '',
         ];
         return view('home/index', $data);
     }

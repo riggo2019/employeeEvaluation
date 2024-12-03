@@ -9,7 +9,7 @@
 
 <body class="">
     @include('home.component.header')
-    <div class="container">
+    <div class="main-content">
         @include( $content )
     </div>
     @include('home.component.scripts')

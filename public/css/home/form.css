@@ -1,0 +1,51 @@
+@import url('../root.css');
+
+.sidebar-list {
+    position: fixed;
+    left: 0;
+    top: var(--header-height);
+    bottom: 0;
+}
+
+.sidebar-list .sidebar-items {
+    overflow-y: scroll;
+    height: calc(100% - var(--header-height));
+}
+.sidebar-list .sidebar-items a {
+    min-height: 70px;
+    display: flex;
+    align-items: center;
+}
+.sidebar-list .sidebar-items a.active,
+.sidebar-list .sidebar-items a:hover {
+    background-color: var(--lighter-primary);
+    color: var(--white);
+    border: none;
+}
+
+/* width */
+.sidebar-list .sidebar-items::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Track */
+.sidebar-list .sidebar-items::-webkit-scrollbar-track {
+    background: #ccc;
+    width: 10px;
+}
+
+/* Handle */
+.sidebar-list .sidebar-items::-webkit-scrollbar-thumb {
+    background: var(--lighter-primary);
+    border-radius: 5px;
+}
+
+/* Handle on hover */
+.sidebar-list .sidebar-items::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
+
+.answer-content {
+    margin-left: 25%;
+    background-color: var(--white);
+}
