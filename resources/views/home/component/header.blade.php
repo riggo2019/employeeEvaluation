@@ -1,38 +1,19 @@
 <div class="header">
-    <div class="container mt-4">
-        <div class="row justify-content-start">
-            <div class="col-md-8">
-                <div class="info-card d-flex align-items-center p-2">
-                    <!-- Logo App -->
-                    <div class="me-2">
-                        <img src="{{ asset('image/logo.jpg') }}" alt="Logo App" class="logo">
-                    </div>
-                    <!-- Thông Tin -->
-                    <div>
-                        <h5 class="mb-0">Phòng khám Đa Khoa Quốc tế IMedicare</h5>
-                        <p class="mb-0">Địa chỉ: Tầng 1, TTTM The Garden, Đ. Mễ Trì, P. Mỹ Đình I, Q. Nam Từ Liêm, Hà Nội
-                        </p>
-                        <p class="mb-0">Liên hệ:</p>
-                        <p class="mb-0">Hotline: 024.3880.3333</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    
     <header
         class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 mb-4 border-bottom">
         <a href="#" class="col-md-2 text-center">
-            <img src="{{ asset('image/logo.jpg') }}"
-                alt="logo" width="50px">
+            <img src="{{ asset('image/logo1.png') }}"
+                alt="logo" width="100%">
         </a>
     
         <ul class="nav col-8 col-md-auto mb-2 justify-content-center mb-md-0">
-            <li><a href="#" class="nav-link px-4 link-secondary">Trang chủ</a></li>
-            <li><a href="#" class="nav-link px-4 link-dark">Phiên dịch - Điều phối</a></li>
-            <li><a href="#" class="nav-link px-4 link-dark">Điều dưỡng</a></li>
-            <li><a href="#" class="nav-link px-4 link-dark">Kỹ thuật viên</a></li>
-            <li><a href="#" class="nav-link px-4 link-dark">Khối hành chính</a></li>
-            <li><a href="#" class="nav-link px-4 link-dark">Quản lý</a></li>
+            <li><a href="#" class="nav-link px-4 link-secondary fw-bold">Trang chủ</a></li>
+            <li><a href="#" class="nav-link px-4 link-dark fw-bold">Phiên dịch - Điều phối</a></li>
+            <li><a href="#" class="nav-link px-4 link-dark fw-bold">Điều dưỡng</a></li>
+            <li><a href="#" class="nav-link px-4 link-dark fw-bold">Kỹ thuật viên</a></li>
+            <li><a href="#" class="nav-link px-4 link-dark fw-bold">Khối hành chính</a></li>
+            <li><a href="#" class="nav-link px-4 link-dark fw-bold">Quản lý</a></li>
         </ul>
     
         <div class="col-md-2 text-center ">
