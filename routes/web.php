@@ -8,6 +8,7 @@ Route::get('/', [HomeController::class, 'index'])
     ->name('home.index');
 Route::get('/translate', [HomeController::class, 'translate'])
     ->name('home.translate');
+Route::post('/loadView', [HomeController::class, 'loadView']);
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);

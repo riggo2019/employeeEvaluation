@@ -131,7 +131,7 @@
                     <div class="info-card d-flex align-items-center p-2">
                         <!-- Logo App -->
                         <div class="me-2">
-                            <img src="{{ asset('image/logo.jpg') }}" alt="Logo App" class="logo">
+                            <img src="{{ asset('image/logo2.jpg') }}" alt="Logo App" class="logo">
                         </div>
                         <!-- Thông Tin -->
                         <div>

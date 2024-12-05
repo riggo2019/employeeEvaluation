@@ -9,11 +9,11 @@ class QuestionsService
     public function getQuestionsByCategory($category_id = null)
     {
         $query = DB::table('categories')->select('categories.*', 'questions.*', 'questions.id as question_id')
-        ->leftJoin('questions', 'questions.category_id', '=', 'categories.id'); // Khởi tạo query builder
+        ->join('questions', 'questions.category_id', '=', 'categories.id'); // Khởi tạo query builder
 
         // Thêm các điều kiện nếu có
-        if (!empty($category)) {
-            $query->where('categories.id', '=', $category);
+        if (!empty($category_id)) {
+            $query->where('categories.id', '=', $category_id);
         }
 
         return $query->get(); // Trả về kết quả

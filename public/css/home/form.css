@@ -11,13 +11,13 @@
     overflow-y: scroll;
     height: calc(100% - var(--header-height));
 }
-.sidebar-list .sidebar-items a {
+.sidebar-list .sidebar-items button {
     min-height: 70px;
     display: flex;
     align-items: center;
 }
-.sidebar-list .sidebar-items a.active,
-.sidebar-list .sidebar-items a:hover {
+.sidebar-list .sidebar-items button.active,
+.sidebar-list .sidebar-items button:hover {
     background-color: var(--lighter-primary);
     color: var(--white);
     border: none;
@@ -45,7 +45,7 @@
     background: var(--primary);
 }
 
-.answer-content {
+#answerContent {
     margin: 0;
     overflow-x: hidden;
     margin-left: 25%;
