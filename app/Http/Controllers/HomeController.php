@@ -4,13 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Services\QuestionsService;
 
 use App\Models\UserModel;
 
 class HomeController extends Controller
 {
-    public function __construct() {
+    protected $QuestionsService;
 
+    public function __construct(QuestionsService $QuestionsService) {
+        $this->QuestionsService = $QuestionsService;
     }
 
     public function index() {
@@ -28,8 +31,8 @@ class HomeController extends Controller
     }
 
     public function translate() {
-        $users = UserModel::getAllUsers();
-
+        $questions = $this->QuestionsService->getQuestionsByCategory();
+        // dd($questions);
         $data['content'] =  'home.content.translate';
         $data['css_files'] = [
             '/css/home/form.css',
