@@ -8,9 +8,9 @@ $(document).ready(function () {
     });
 
     var firstButton = $('.load-view-btn').first();
-    firstButton.addClass('active'); 
+    firstButton.addClass('active');
 
-    var viewType = firstButton.data('type'); 
+    var viewType = firstButton.data('type');
 
     $.ajax({
         url: `${baseUrl}/loadView`,
@@ -18,7 +18,7 @@ $(document).ready(function () {
         data: { viewType: viewType },
         success: function (response) {
             if (response.status) {
-                $('#answerContent').html(response.html); 
+                $('#answerContent').html(response.html);
             } else {
                 alert('Failed to load view: ' + response.message);
             }
@@ -30,7 +30,7 @@ $(document).ready(function () {
 
     $('.load-view-btn').click(function () {
         var viewType = $(this).data('type');
-        
+
         $('.load-view-btn').removeClass('active');
         $(this).addClass('active');
 

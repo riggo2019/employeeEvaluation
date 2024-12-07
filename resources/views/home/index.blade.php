@@ -9,6 +9,7 @@
 
 <body class="">
     @include('home.component.header')
+    @include('home.component.toast')
     <div class="main-content">
         @include( $content )
     </div>

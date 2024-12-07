@@ -16,3 +16,30 @@ header {
 body {
     overflow-x: hidden;
 }
+
+/* Xóa spinner trên Chrome, Safari, Edge */
+input[type="number"]::-webkit-inner-spin-button, 
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Xóa spinner trên Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+@keyframes slideInRight {
+    0% {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.toast.animate-slide-in {
+    animation: slideInRight 0.5s ease-in-out; 
+}

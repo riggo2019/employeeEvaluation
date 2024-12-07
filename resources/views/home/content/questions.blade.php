@@ -11,9 +11,26 @@
                     </div>
                 </div>
                 <div class="col-md-1">
+                    <input type="number" 
+                           name="answer-{{ $question->id }}"  
+                           class="form-control text-center" 
+                           min="0" 
+                           max="100" 
+                           style="height: 100%;" 
+                           oninput="validateInput(this)">
                 </div>
             </div>
         </div>
     @endforeach
     </div>
 </div>
+<script>
+    function validateInput(input) {
+        const value = parseInt(input.value, 10);
+
+        if (value < 0 || value > 100) {
+            input.value = '';
+            showToast('Chỉ cho phép nhập điểm từ 1 tới 100','danger')
+        }
+    }
+</script>

@@ -51,17 +51,8 @@ class HomeController extends Controller
     {
         $viewType = $request->input('viewType');
 
-        $categories = [
-            1 => ['name' => 'Dịch vụ', 'category_id' => 1],
-            2 => ['name' => 'Giao tiếp', 'category_id' => 2],
-            3 => ['name' => 'Lãnh đạo và người quản lý', 'category_id' => 3],
-            4 => ['name' => 'Trách nhiệm', 'category_id' => 4],
-            5 => ['name' => 'Hỗ trợ', 'category_id' => 5]
-        ];
-
         $category_list = categoriesModel::all();
 
-        // Chuyển đổi thành mảng với key là id và giá trị là name, category_id
         $categoriesArray = $category_list->mapWithKeys(function ($category) {
             return [
                 $category->id => [
@@ -91,4 +82,6 @@ class HomeController extends Controller
             'message' => 'render view successfully'
         ]);
     }
+
+    
 }
