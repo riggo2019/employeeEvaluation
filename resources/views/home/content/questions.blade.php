@@ -10,22 +10,32 @@
                     <div class="col-md-11 border-end">
                         <div class="card-body">
                             <h5 class="card-title">Câu hỏi {{ $index + 1 }}</h5>
-                            <!-- Hiển thị Câu hỏi 1, Câu hỏi 2,... -->
                             <p class="card-text">{{ $question->question_content }}</p>
-                            <!-- Hiển thị nội dung câu hỏi -->
                         </div>
                     </div>
                     <div class="col-md-1">
-                        <input type="number" name="answer-{{ $question->id }}" class="form-control point-input text-center"
-                            min="0" max="100" style="height: 100%;">
+                        <input type="number" name="answer-{{ $question->id }}"
+                            class="form-control point-input text-center" min="0" max="100"
+                            style="height: 100%;">
                     </div>
                 </div>
             </div>
         @endforeach
     </div>
-    <div class="d-flex justify-content-end align-items-center py-3">
-        <button class="btn btn-primary" id="nextButton">Tiếp theo</button>
+    <div class="d-flex justify-content-between align-items-center py-3">
+        <?php if( $viewType > 1 && isset($prevViewType)): ?>
+        <button class="btn btn-primary" id="prevButton" data-view-type="{{ $viewType }}"
+            data-prev-view-type="{{ $prevViewType }}">Quay lại</button>
+        <?php endif; ?>
+
+        <?php if( $viewType < 13 ): ?>
+        <button class="btn btn-primary" id="nextButton" data-view-type="{{ $viewType }}"
+            data-next-view-type="{{ $nextViewType }}">Tiếp theo</button>
+        <?php else: ?>
+        <button class="btn btn-primary" id="finalButton">Hoàn thành</button>
+        <?php endif; ?>
     </div>
+
 </div>
 <script>
     $(document).ready(function() {
@@ -48,28 +58,57 @@
             const average = count > 0 ? (total / count).toFixed(2) : 0;
             $('#avgPoint').text(`Trung bình: ${average}`);
         });
+
         $('.point-input').trigger('input');
 
-        $('#nextButton').on('click', function () {
+        $('#nextButton').on('click', function() {
             let allFilled = true;
-
             // Kiểm tra tất cả các ô nhập
-            $('.point-input').each(function () {
+            $('.point-input').each(function() {
                 const value = $(this).val();
                 const parentCard = $(this).closest('.card');
                 if (value === '' || isNaN(parseInt(value, 10))) {
                     allFilled = false;
                     parentCard.addClass('error-border');
                 } else {
-                    parentCard.removeClass('error-border'); 
+                    parentCard.removeClass('error-border');
                 }
             });
 
             if (!allFilled) {
                 showToast('Bạn chưa trả lời tất cả câu hỏi', 'danger');
+                return;
             } else {
-                showToast('Tất cả câu hỏi đã được trả lời. Chuyển sang bước tiếp theo.', 'success');
+                var viewType = $(this).data('view-type');
+                var nextViewType = $(this).data('next-view-type');
+                tempAnswers[viewType] = {};
+                $('.point-input').each(function() {
+                    const questionId = $(this).attr('name'); 
+                    const value = $(this).val();
+                    tempAnswers[viewType][questionId] = value;
+                });
+                $('.load-view-btn').removeClass('active');
+                console.log(tempAnswers)
+                $(`#viewType_${nextViewType}`).addClass('active');
+                loadView(nextViewType)
             }
+        });
+
+        $('#prevButton').on('click', function() {
+            var viewType = $(this).data('view-type');
+            var prevViewType = $(this).data('prev-view-type');
+
+            tempAnswers[viewType] = {};
+            $('.point-input').each(function() {
+                const questionId = $(this).attr('name'); 
+                const value = $(this).val();
+                tempAnswers[viewType][questionId] = value;
+            });
+
+            $('.load-view-btn').removeClass('active');
+
+            $(`#viewType_${prevViewType}`).addClass('active');
+            loadView(prevViewType)
         });
     });
 </script>

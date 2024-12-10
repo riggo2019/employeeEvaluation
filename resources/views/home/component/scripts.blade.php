@@ -1,3 +1,4 @@
+<script src="{{ asset("/js/home/toast.js") }}"></script>
 @if (isset($js_files))
     @foreach ($js_files as $js)
         <script src="{{ asset("$js") }}"></script>

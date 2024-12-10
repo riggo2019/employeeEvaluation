@@ -73,6 +73,11 @@ class HomeController extends Controller
         $category = $categoriesArray[$viewType];
         $data['questions'] = $this->QuestionsService->getQuestionsByCategory($category['category_id']);
         $data['category_name'] = $category['name'];
+        $data['viewType'] = $viewType;
+        $data['nextViewType'] = $viewType + 1;
+        if($viewType > 1) {
+            $data['prevViewType'] = $viewType - 1;
+        }
 
         $html = view('home.content.questions', $data)->render();  // Đảm bảo render view thành HTML
 
@@ -83,5 +88,49 @@ class HomeController extends Controller
         ]);
     }
 
-    
+    public function saveTempScore(Request $request)
+    {
+        $viewType = $request->input('viewType');
+        $scores = $request->input('scores'); // Mảng điểm số từ client
+
+        $tempScores = session()->get('tempScores', []);
+        $tempScores[$viewType] = $scores;
+
+        session()->put('tempScores', $tempScores);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Scores saved temporarily'
+        ]);
+    }
+
+//     public function saveFinalScore()
+// {
+//     $tempScores = session()->get('tempScores', []);
+
+//     if (empty($tempScores)) {
+//         return response()->json([
+//             'status' => false,
+//             'message' => 'No scores to save'
+//         ]);
+//     }
+
+//     foreach ($tempScores as $categoryId => $scores) {
+//         foreach ($scores as $questionId => $score) {
+//             SurveyResult::create([
+//                 'category_id' => $categoryId,
+//                 'question_id' => $questionId,
+//                 'score' => $score,
+//                 'user_id' => auth()->id(), // Giả sử lưu theo user
+//             ]);
+//         }
+//     }
+
+//     session()->forget('tempScores');
+
+//     return response()->json([
+//         'status' => true,
+//         'message' => 'Scores saved successfully'
+//     ]);
+// }
 }

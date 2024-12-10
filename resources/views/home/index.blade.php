@@ -8,11 +8,11 @@
 </head>
 
 <body class="">
+    @include('home.component.scripts')
     @include('home.component.header')
     @include('home.component.toast')
     <div class="main-content">
         @include( $content )
     </div>
-    @include('home.component.scripts')
 </body>
 </html>
