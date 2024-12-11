@@ -14,7 +14,7 @@
                         </div>
                     </div>
                     <div class="col-md-1">
-                        <input type="number" name="answer-{{ $question->id }}"
+                        <input type="number" name="{{ $question->id }}"
                             class="form-control point-input text-center" min="0" max="100"
                             style="height: 100%;">
                     </div>
@@ -32,7 +32,7 @@
         <button class="btn btn-primary" id="nextButton" data-view-type="{{ $viewType }}"
             data-next-view-type="{{ $nextViewType }}">Tiếp theo</button>
         <?php else: ?>
-        <button class="btn btn-primary" id="finalButton">Hoàn thành</button>
+        <button class="btn btn-primary" id="finalButton" data-view-type="{{ $viewType }}">Hoàn thành</button>
         <?php endif; ?>
     </div>
 
@@ -83,7 +83,7 @@
                 var nextViewType = $(this).data('next-view-type');
                 tempAnswers[viewType] = {};
                 $('.point-input').each(function() {
-                    const questionId = $(this).attr('name'); 
+                    const questionId = $(this).attr('name');
                     const value = $(this).val();
                     tempAnswers[viewType][questionId] = value;
                 });
@@ -100,7 +100,7 @@
 
             tempAnswers[viewType] = {};
             $('.point-input').each(function() {
-                const questionId = $(this).attr('name'); 
+                const questionId = $(this).attr('name');
                 const value = $(this).val();
                 tempAnswers[viewType][questionId] = value;
             });
@@ -109,6 +109,32 @@
 
             $(`#viewType_${prevViewType}`).addClass('active');
             loadView(prevViewType)
+        });
+
+        $('#finalButton').on('click', function() {
+            var viewType = $(this).data('view-type');
+            tempAnswers[viewType] = {};
+            $('.point-input').each(function() {
+                const questionId = $(this).attr('name');
+                const value = $(this).val();
+                tempAnswers[viewType][questionId] = value;
+            });
+            $.ajax({
+                url: `${baseUrl}/storeScore`,
+                method: 'POST',
+                data: {
+                    scores: tempAnswers,
+                    _token: $('meta[name="csrf-token"]').attr('content'), // Bảo mật CSRF
+                },
+                success: function(response) {
+                    console.log(response);
+                    showToast('Đánh giá thành công', 'success');
+                    window.location.href = `${baseUrl}/results`; 
+                },
+                error: function(xhr) {
+                    alert('Lỗi khi lưu dữ liệu: ' + xhr.responseText);
+                }
+            });
         });
     });
 </script>

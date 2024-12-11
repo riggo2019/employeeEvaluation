@@ -21,6 +21,7 @@ $(document).ready(function () {
 
         loadView(viewType)
     });
+    
 });
 
 function loadView(viewType) {
@@ -48,3 +49,4 @@ function loadView(viewType) {
         }
     });
 }
+
