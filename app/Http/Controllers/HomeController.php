@@ -5,17 +5,27 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Services\QuestionsService;
+use App\Services\ScoreService;
+use App\Services\UserService;
 
 use App\Models\UserModel;
 use App\Models\categoriesModel;
+use App\Models\UserQuestionScore;
+use App\Models\UserScore;
+
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
     protected $QuestionsService;
+    protected $ScoreService;
+    protected $UserService;
 
-    public function __construct(QuestionsService $QuestionsService)
+    public function __construct(QuestionsService $QuestionsService, ScoreService $ScoreService, UserService $UserService)
     {
         $this->QuestionsService = $QuestionsService;
+        $this->ScoreService = $ScoreService;
+        $this->UserService = $UserService;
     }
 
     public function index()
@@ -37,6 +47,7 @@ class HomeController extends Controller
     {
         // $questions = $this->QuestionsService->getQuestionsByCategory(2);
         // dd($questions);
+        $data['category_list'] = categoriesModel::all();
         $data['content'] =  'home.content.translate';
         $data['css_files'] = [
             '/css/home/form.css',
@@ -44,6 +55,7 @@ class HomeController extends Controller
         $data['js_files'] = [
             '/js/home/questions.js',
         ];
+
         return view('home/index', $data);
     }
 
@@ -75,7 +87,7 @@ class HomeController extends Controller
         $data['category_name'] = $category['name'];
         $data['viewType'] = $viewType;
         $data['nextViewType'] = $viewType + 1;
-        if($viewType > 1) {
+        if ($viewType > 1) {
             $data['prevViewType'] = $viewType - 1;
         }
 
@@ -104,33 +116,100 @@ class HomeController extends Controller
         ]);
     }
 
-//     public function saveFinalScore()
-// {
-//     $tempScores = session()->get('tempScores', []);
+    public function storeScore(Request $request)
+    {
+        $userId = 1; // ID người dùng (hoặc sử dụng `auth()->id()` nếu có hệ thống xác thực)
+        $scores = $request->input('scores');
 
-//     if (empty($tempScores)) {
-//         return response()->json([
-//             'status' => false,
-//             'message' => 'No scores to save'
-//         ]);
-//     }
+        try {
+            foreach ($scores as $categoryId => $categoryScores) {
+                $questionCount = count($categoryScores);
+                $categoryScoreSum = 0;
 
-//     foreach ($tempScores as $categoryId => $scores) {
-//         foreach ($scores as $questionId => $score) {
-//             SurveyResult::create([
-//                 'category_id' => $categoryId,
-//                 'question_id' => $questionId,
-//                 'score' => $score,
-//                 'user_id' => auth()->id(), // Giả sử lưu theo user
-//             ]);
-//         }
-//     }
+                foreach ($categoryScores as $questionId => $score) {
+                    // Sử dụng Model UserQuestionScore để cập nhật hoặc thêm mới
+                    UserQuestionScore::updateOrCreate(
+                        [
+                            'user_id' => $userId,
+                            'question_id' => $questionId,
+                        ],
+                        [
+                            'score' => $score,
+                        ]
+                    );
 
-//     session()->forget('tempScores');
+                    $categoryScoreSum += $score;
+                }
 
-//     return response()->json([
-//         'status' => true,
-//         'message' => 'Scores saved successfully'
-//     ]);
-// }
+                // Tính điểm trung bình cho danh mục
+                $averageScore = $questionCount > 0 ? $categoryScoreSum / $questionCount : 0;
+
+                // Sử dụng Model UserScore để cập nhật hoặc thêm mới
+                UserScore::updateOrCreate(
+                    [
+                        'user_id' => $userId,
+                        'category_id' => $categoryId,
+                    ],
+                    [
+                        'average_score' => $averageScore,
+                    ]
+                );
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Scores saved successfully!',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Error saving scores: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function showResults()
+    {
+        $userId = 1;
+        $scores = $this->ScoreService->getScoresWithCategories($userId);
+        $user = $this->UserService->getUserFullInfo($userId);
+
+        $scoresWithEvaluation = $scores->map(function ($score) {
+            return [
+                'category_name' => $score->category_name,
+                'average_score' => $score->average_score,
+                'evaluation' => $this->evaluateScore($score->average_score),
+            ];
+        });
+        $averageOfAllCategories = $scores->avg('average_score');
+        $overallEvaluation = $this->evaluateScore($averageOfAllCategories);
+        $data = [
+            'scores' => $scoresWithEvaluation,
+            'overallAverage' => $averageOfAllCategories,
+            'overallEvaluation' => $overallEvaluation,
+            'user' => $user,
+        ];
+
+        $data['content'] =  'home.content.results';
+        $data['css_files'] = [
+        ];
+        $data['js_files'] = [
+        ];
+        return view('home/index', $data);
+    }
+
+    private function evaluateScore($score)
+    {
+        if ($score >= 91 && $score <= 100) {
+            return 'Xuất sắc';
+        } elseif ($score >= 81 && $score <= 90) {
+            return 'Giỏi';
+        } elseif ($score >= 66 && $score <= 80) {
+            return 'Khá';
+        } elseif ($score >= 51 && $score <= 65) {
+            return 'Trung bình';
+        } else {
+            return 'Kém';
+        }
+    }
 }

@@ -9,6 +9,8 @@ Route::get('/', [HomeController::class, 'index'])
 Route::get('/translate', [HomeController::class, 'translate'])
     ->name('home.translate');
 Route::post('/loadView', [HomeController::class, 'loadView']);
+Route::post('/storeScore', [HomeController::class, 'storeScore']);
+Route::get('/results', [HomeController::class, 'showResults']);
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
