@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 <!-- <div class="container">
+=======
+<div class="container">
+>>>>>>> a4cb8c4c475fbc86414675ce3ce80d09654c1459
     <h1>Kết quả</h1>
     <h3>Họ và tên: <span>{{ $user->full_name }}</span></h3>
     <h3>Bộ phận: <span>{{ $user->department_name }}</span></h3>
