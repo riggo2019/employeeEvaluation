@@ -1,5 +1,4 @@
-<header
-    class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 border-bottom">
+<header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-3 border-bottom">
     <a href="#" class="col-md-2 text-center">
         <img src="{{ asset('image/logo1.png') }}" alt="logo" height="50px">
     </a>
@@ -12,23 +11,15 @@
         <li><a href="#" class="nav-link px-4 link-dark">Khối hành chính</a></li>
         <li><a href="#" class="nav-link px-4 link-dark">Quản lý</a></li>
     </ul>
-
-    <div class="col-md-2 text-center ">
-        <button type="button" class="btn btn-outline-primary me-2">Đăng nhập</button>
-        <button type="button" class="btn btn-primary">Đăng ký</button>
+    @if (!Auth::check())
+        <div class="col-md-2 text-center">
+            <a href="{{ route('login') }}" class="btn btn-outline-primary me-2">Đăng nhập</a>
+            <a href="{{ route('register') }}" class="btn btn-primary">Đăng ký</a>
+        </div>
+    @else
+    <div class="col-md-2 d-flex gap-2 flex-row align-items-center">
+        <h5 class="fs-6 mb-0">Xin chào: <strong>{{ Auth::user()->first_name . ' ' .  Auth::user()->last_name}}</strong></h2>
+        <a href="{{ route('logout') }}" class="btn">Đăng xuất</a>
     </div>
-    <div class="col-md-2 dropdown text-center d-none">
-        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
-            data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
-        </a>
-        <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-            <li><a class="dropdown-item" href="#">Settings</a></li>
-            <li><a class="dropdown-item" href="#">Profile</a></li>
-            <li>
-                <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item" href="#">Sign out</a></li>
-        </ul>
-    </div>
+    @endif
 </header>

@@ -2,62 +2,72 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User;
+use App\Http\Requests\AuthRequest;
+use App\Http\Requests\RegisterRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\UserModel;
+use Illuminate\Support\Facades\Session;
+
 
 class AuthController extends Controller
 {
-    // Hiển thị form đăng nhập
+    public function __construct()
+    {
+    }
+
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
-    // Xử lý đăng nhập
-    public function login(Request $request)
-    {
-        $credentials = $request->validate([
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
-
-        if (Auth::attempt($credentials)) {
-            return redirect()->route('home')->with('success', 'Đăng nhập thành công!');
-        }
-
-        return back()->withErrors(['email' => 'Email hoặc mật khẩu không đúng.']);
-    }
-
-    // Hiển thị form đăng ký
     public function showRegisterForm()
     {
         return view('auth.register');
     }
 
-    // Xử lý đăng ký
-    public function register(Request $request)
+    public function login(AuthRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed',
-        ]);
-
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        return redirect()->route('login')->with('success', 'Đăng ký thành công! Hãy đăng nhập.');
+        $credentials = request()->all('user_name', 'password'); 
+        if (Auth::attempt($credentials)) {
+            return redirect()->route('home.index')->with('success', 'Đăng nhập thành công');
+        } else {
+            return redirect()->route('auth.login')->with('error', 'Tên đăng nhập hoặc mật khẩu không đúng.');
+        }
+    }
+    
+    public function register(RegisterRequest $request)
+    {
+        $data = request()->all('first_name', 'last_name', 'user_name');
+        $data['password'] = Hash::make(request('password'));
+        $data['department_id'] = 1;
+        if (UserModel::create($data)) {
+            $credentials = [
+                'user_name' => $data['user_name'],
+                'password' => $data['password']
+            ];
+            if (Auth::attempt($credentials)) {
+                Session::put('message', 'Đăng nhập thành công');
+                Session::put('type', 'success');
+                return redirect()->route('home.index');
+            } else {
+                return redirect()->route('auth.login')->with('error', 'Tên đăng nhập hoặc mật khẩu không đúng.');
+            }
+        } else {
+            return redirect()->route('auth.register')->with('error', 'Đăng ký tài khoản thất bại');
+        }
     }
 
-    // Đăng xuất
-    public function logout()
+    public function logout(Request $request)
     {
         Auth::logout();
-        return redirect()->route('home');
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        Session::put('message', 'Đăng xuất thành công');
+        Session::put('type', 'success');
+        return redirect()->route('home.index');
     }
 }

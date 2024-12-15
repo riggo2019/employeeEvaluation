@@ -13,6 +13,8 @@ $(document).ready(function () {
     firstButton.addClass('active');
     loadView(1);
 
+    
+
     $('.load-view-btn').click(function () {
         var viewType = $(this).data('type');
 
@@ -46,6 +48,22 @@ function loadView(viewType) {
         },
         error: function (xhr) {
             alert('Error: ' + xhr.status + ' ' + xhr.statusText);
+        }
+    });
+    const maxViewType = Math.max(...Object.keys(tempAnswers).map(Number)) || 0;
+
+    $(".load-view-btn").each(function () {
+        const viewType = $(this).data("type");
+
+        if (tempAnswers[viewType]) {
+            $(`#checkIcon_${viewType}`).show();
+            $(this).prop("disabled", false);
+        } else if (viewType === maxViewType + 1) {
+            $(`#checkIcon_${viewType}`).hide();
+            $(this).prop("disabled", false);
+        } else {
+            $(this).prop("disabled", true);
+            $(`#checkIcon_${viewType}`).hide();
         }
     });
 }

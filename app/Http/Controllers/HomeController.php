@@ -170,7 +170,7 @@ class HomeController extends Controller
 
     public function showResults()
     {
-        $userId = 1;
+        $userId = 2;
         $scores = $this->ScoreService->getScoresWithCategories($userId);
         $user = $this->UserService->getUserFullInfo($userId);
 
