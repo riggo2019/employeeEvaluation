@@ -43,12 +43,12 @@ class HomeController extends Controller
         return view('home/index', $data);
     }
 
-    public function translate()
+    public function answer()
     {
         // $questions = $this->QuestionsService->getQuestionsByCategory(2);
         // dd($questions);
         $data['category_list'] = categoriesModel::all();
-        $data['content'] =  'home.content.translate';
+        $data['content'] =  'home.content.answer';
         $data['css_files'] = [
             '/css/home/form.css',
         ];
@@ -191,10 +191,8 @@ class HomeController extends Controller
         ];
 
         $data['content'] =  'home.content.results';
-        $data['css_files'] = [
-        ];
-        $data['js_files'] = [
-        ];
+        $data['css_files'] = [];
+        $data['js_files'] = [];
         return view('home/index', $data);
     }
 

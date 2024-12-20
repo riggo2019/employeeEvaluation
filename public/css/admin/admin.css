@@ -1,0 +1,15 @@
+nav {
+    position: relative;
+    min-height: 100vh;
+}
+
+nav a.logout-option {
+    position: fixed;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+}
+
+.dataTables_wrapper .dataTables_length {
+    display: none;
+}

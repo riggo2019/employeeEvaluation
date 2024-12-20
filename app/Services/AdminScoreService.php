@@ -4,15 +4,14 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
 
-class UserService
+class AdminScoreService
 {
     public function getUserFullInfo($user_id = null)
     {
         $query = DB::table('users')->select(
             'users.*',
             'departments.*',
-            DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS full_name"),
-            DB::raw("DATE_FORMAT(users.start_date, '%d/%m/%Y') AS formatted_start_date")
+            DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS full_name")
         )
             ->join('departments', 'users.department_id', '=', 'departments.id'); // Khởi tạo query builder
 

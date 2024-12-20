@@ -32,9 +32,16 @@ class AuthController extends Controller
     {
         $credentials = request()->all('user_name', 'password'); 
         if (Auth::attempt($credentials)) {
+            if (Auth::user()->is_admin == 1) {
+                Session::put('message', 'Bạn đã đăng nhập với tư cách quản trị viên.');
+                Session::put('type', 'error');
+                return redirect()->route('admin.index');
+            }
             return redirect()->route('home.index')->with('success', 'Đăng nhập thành công');
         } else {
-            return redirect()->route('auth.login')->with('error', 'Tên đăng nhập hoặc mật khẩu không đúng.');
+            Session::put('message', 'Mật khẩu không chính xác.');
+            Session::put('type', 'error');
+            return redirect()->route('auth.login')->with('error', 'Mật khẩu không chính xác.');
         }
     }
     
