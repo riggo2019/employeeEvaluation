@@ -18,6 +18,8 @@ class UserModel extends Model
         'department_id',
         'user_name',
         'password',
+        'is_admin',
+        'start_date',
     ];
 
     public static function getAllUsers()

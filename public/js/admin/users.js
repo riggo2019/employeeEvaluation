@@ -1,7 +1,6 @@
 $(document).ready(function () {
     $('#usersTable').DataTable({
         "info": false,
-        "ordering": false,
         "pageLength": 10,
         "language": {
             "lengthMenu": "Hiển thị _MENU_ bản ghi mỗi trang",

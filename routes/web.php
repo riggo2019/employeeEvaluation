@@ -31,4 +31,7 @@ Route::prefix('/')->middleware(AuthenticateMiddleware::class)->group(function ()
 Route::prefix('admin')->middleware(AuthenticateMiddleware::class)->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get('/addUsers', [AdminController::class, 'addUsers'])->name('admin.addUsers');
+    
+    Route::post('/storeUsers', [AdminController::class, 'storeUsers'])->name('admin.storeUsers');
 });

@@ -13,3 +13,8 @@ nav a.logout-option {
 .dataTables_wrapper .dataTables_length {
     display: none;
 }
+
+.admin-logo {
+    width: 50px;
+    padding-right: 10px;
+}

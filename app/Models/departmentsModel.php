@@ -6,13 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 
-class questionTypeModel extends Model
+class departmentsModel extends Model
 {
     use HasFactory, Notifiable;
 
-    protected $table = 'question_types';
+    protected $table = 'departments';
 
     protected $fillable = [
-        'type_name',
+        'department_name',
     ];
 }

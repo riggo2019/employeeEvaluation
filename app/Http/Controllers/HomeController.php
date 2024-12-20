@@ -13,6 +13,7 @@ use App\Models\categoriesModel;
 use App\Models\UserQuestionScore;
 use App\Models\UserScore;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -118,7 +119,10 @@ class HomeController extends Controller
 
     public function storeScore(Request $request)
     {
-        $userId = 1; // ID người dùng (hoặc sử dụng `auth()->id()` nếu có hệ thống xác thực)
+        if(Auth::check()){
+            $userId = Auth::user()->id; // ID người dùng (hoặc sử dụng `auth()->id()` nếu có hệ thống xác thực)
+        }
+
         $scores = $request->input('scores');
 
         try {
@@ -170,7 +174,10 @@ class HomeController extends Controller
 
     public function showResults()
     {
-        $userId = 2;
+        if(Auth::check()){
+            $userId = Auth::user()->id; 
+        }
+        
         $scores = $this->ScoreService->getScoresWithCategories($userId);
         $user = $this->UserService->getUserFullInfo($userId);
 

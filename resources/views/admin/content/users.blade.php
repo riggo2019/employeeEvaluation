@@ -16,7 +16,7 @@
                             <th>Tên nhân viên</th>
                             <th>Bộ phận</th>
                             <th>Tên đăng nhập</th>
-                            <th>Vai trò</th>
+                            <th>Quyền</th>
                             <th>Ngày bắt đầu làm việc</th>
                         </tr>
                     </thead>

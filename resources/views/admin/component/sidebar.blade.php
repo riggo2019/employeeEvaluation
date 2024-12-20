@@ -1,6 +1,6 @@
 <div class="dash-nav dash-nav-dark">
     <header>
-        <div class="easion-logo text-white"><img src="{{ asset('image/logo2.jpg') }}" style="width:50px"><span>I-Medicare</span></div>
+        <div class="easion-logo text-white"><img src="{{ asset('image/logo2.jpg') }}" class="admin-logo"><span>I-Medicare</span></div>
     </header>
     <nav class="dash-nav-list">
         <a href="{{ route('admin.index') }}" class="dash-nav-item">
@@ -11,7 +11,7 @@
                 <i class="fas fa-user-tie"></i>Quản lý nhân viên</a>
             <div class="dash-nav-dropdown-menu">
                 <a href="{{ route('admin.users') }}" class="dash-nav-dropdown-item">Danh sách</a>
-                <a href="{{ route('admin.users') }}" class="dash-nav-dropdown-item">Thêm mới</a>
+                <a href="{{ route('admin.addUsers') }}" class="dash-nav-dropdown-item">Thêm mới</a>
             </div>
         </div>
         <div class="dash-nav-dropdown">
