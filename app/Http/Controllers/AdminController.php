@@ -48,7 +48,9 @@ class AdminController extends Controller
         $data['css_files'] = [
             '/css/admin/admin.css',
         ];
-        $data['js_files'] = [];
+        $data['js_files'] = [
+            '/js/admin/admin.js',
+        ];
         return view('admin/index', $data);
     }
 

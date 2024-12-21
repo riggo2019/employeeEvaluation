@@ -14,7 +14,7 @@
                 <a href="{{ route('admin.addUsers') }}" class="dash-nav-dropdown-item">Thêm mới</a>
             </div>
         </div>
-        <div class="dash-nav-dropdown">
+        {{-- <div class="dash-nav-dropdown">
             <a href="javascript::void(0)" class="dash-nav-item dash-nav-dropdown-toggle">
                 <i class="fas fa-building"></i>Quản lý đánh giá</a>
             <div class="dash-nav-dropdown-menu">
@@ -23,7 +23,7 @@
                 <a href="user-add.html" class="dash-nav-dropdown-item">Kỹ thuật viên</a>
                 <a href="user-add.html" class="dash-nav-dropdown-item">Khối Hành chính</a>
             </div>
-        </div>
+        </div> --}}
         <div class="dash-nav-dropdown">
             <a href="javascript::void(0)" class="dash-nav-item dash-nav-dropdown-toggle">
                 <i class="fas fa-users"></i>Tổng hợp bộ phận</a>
