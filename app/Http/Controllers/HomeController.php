@@ -7,11 +7,14 @@ use App\Http\Controllers\Controller;
 use App\Services\QuestionsService;
 use App\Services\ScoreService;
 use App\Services\UserService;
+use App\Services\DepartmentsService;
+use App\Services\CategoriesService;
 
 use App\Models\UserModel;
 use App\Models\categoriesModel;
 use App\Models\UserQuestionScore;
 use App\Models\UserScore;
+
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -21,12 +24,20 @@ class HomeController extends Controller
     protected $QuestionsService;
     protected $ScoreService;
     protected $UserService;
+    protected $DepartmentsService;
+    protected $CategoriesService;
 
-    public function __construct(QuestionsService $QuestionsService, ScoreService $ScoreService, UserService $UserService)
+    public function __construct(QuestionsService $QuestionsService, 
+                                ScoreService $ScoreService, 
+                                UserService $UserService,
+                                CategoriesService $CategoriesService,
+                                DepartmentsService $DepartmentsService)
     {
         $this->QuestionsService = $QuestionsService;
         $this->ScoreService = $ScoreService;
         $this->UserService = $UserService;
+        $this->DepartmentsService = $DepartmentsService;
+        $this->CategoriesService = $CategoriesService;
     }
 
     public function index()
@@ -119,10 +130,10 @@ class HomeController extends Controller
 
     public function storeScore(Request $request)
     {
+        $userModel = new UserModel();
         if(Auth::check()){
             $userId = Auth::user()->id; // ID người dùng (hoặc sử dụng `auth()->id()` nếu có hệ thống xác thực)
         }
-
         $scores = $request->input('scores');
 
         try {
@@ -159,14 +170,20 @@ class HomeController extends Controller
                     ]
                 );
             }
+            $is_update = UserModel::where('id', $userId)->update(['answered' => 1]);
+            
+            if($is_update){
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Scores saved successfully!',
+                ]);
+            }
 
-            return response()->json([
-                'status' => true,
-                'message' => 'Scores saved successfully!',
-            ]);
+            
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
+                'id' => $userId,
                 'message' => 'Error saving scores: ' . $e->getMessage(),
             ], 500);
         }
@@ -216,5 +233,27 @@ class HomeController extends Controller
         } else {
             return 'Kém';
         }
+    }
+
+    public function evaluation_management() {
+        $departments = $this->DepartmentsService->getDepartmentList();
+        $employees = $this->UserService->getEmployeeFullInfo();
+
+        foreach ($employees as $employee) {
+            $employee->categories = $this->ScoreService->getScoresWithCategories($employee->id);
+            foreach ($employee->categories as $category) {
+                $category->average_score = $this->evaluateScore($category->average_score);
+                $category->question_scores = $this->ScoreService->getListOfScore($category->category_id, $category->user_id);
+            }
+        }
+        $data['departments'] = $departments;
+        $data['employees'] = $employees;
+        $data['content'] =  'home.content.evaluation_management';
+        $data['css_files'] = [];
+        $data['js_files'] = [];
+
+        // dd($data);
+        
+        return view('home/index', $data);
     }
 }

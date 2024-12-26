@@ -22,7 +22,12 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::prefix('/')->middleware(AuthenticateMiddleware::class)->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
     Route::get('/answer', [HomeController::class, 'answer'])->name('home.answer');
-    Route::get('/results', [HomeController::class, 'showResults']);
+    Route::get('/results', [HomeController::class, 'showResults'])->name('home.results');
+
+    Route::prefix('/evaluation_management')->group(function () {
+        Route::get('/', [HomeController::class, 'evaluation_management'])->name('evaluation_management');
+    });
+
     Route::post('/loadView', [HomeController::class, 'loadView']);
     Route::post('/storeScore', [HomeController::class, 'storeScore']);
 });

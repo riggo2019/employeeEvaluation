@@ -19,6 +19,7 @@ class UserModel extends Model
         'user_name',
         'password',
         'is_admin',
+        'answered',
         'start_date',
     ];
 

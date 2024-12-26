@@ -132,6 +132,7 @@
                     window.location.href = `${baseUrl}/results`; 
                 },
                 error: function(xhr) {
+                    console.log(xhr);
                     alert('Lỗi khi lưu dữ liệu: ' + xhr.responseText);
                 }
             });

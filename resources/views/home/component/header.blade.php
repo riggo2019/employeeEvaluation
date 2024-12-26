@@ -5,11 +5,15 @@
     <ul class="nav col-md-auto mb-2 justify-content-center mb-md-0">
         <li><a href="{{ route('home.index') }}" class="nav-link px-4 link-secondary">Trang chủ</a></li>
         @if (Auth::check() && Auth::user()->is_admin == 1)
-            <li><a href="{{ route('home.answer') }}" class="nav-link px-4 link-dark">Trả lời câu hỏi<i></i></a></li>
             <li><a href="{{ route('admin.index') }}" class="nav-link px-4 link-dark">Trang quản lý</a></li>
         @else
-            <li><a href="{{ route('home.answer') }}" class="nav-link px-4 link-dark">Trả lời câu hỏi</a></li>
+            @if(Auth::user()->answered == 1)
+                <li><a href="{{ route('home.results') }}" class="nav-link px-4 link-dark">Trang kết quả</a></li>
+            @else
+                <li><a href="{{ route('home.answer') }}" class="nav-link px-4 link-dark">Trả lời câu hỏi</a></li>
+            @endif
         @endif
+        <li><a href="{{ route('evaluation_management') }}" class="nav-link px-4 link-secondary">Quản lý đánh giá</a></li>
     </ul>
 
 
