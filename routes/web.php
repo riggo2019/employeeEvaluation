@@ -23,13 +23,12 @@ Route::prefix('/')->middleware(AuthenticateMiddleware::class)->group(function ()
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
     Route::get('/answer', [HomeController::class, 'answer'])->name('home.answer');
     Route::get('/results', [HomeController::class, 'showResults'])->name('home.results');
-
-    Route::prefix('/evaluation_management')->group(function () {
-        Route::get('/', [HomeController::class, 'evaluation_management'])->name('evaluation_management');
-    });
+    Route::get('/evaluation_management', [HomeController::class, 'evaluation_management'])->name('evaluation_management');
 
     Route::post('/loadView', [HomeController::class, 'loadView']);
+    Route::post('/storeAdminScores', [HomeController::class, 'storeAdminScores'])->name('storeAdminScores');
     Route::post('/storeScore', [HomeController::class, 'storeScore']);
+
 });
 
 // Middleware và prefix cho admin

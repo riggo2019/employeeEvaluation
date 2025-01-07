@@ -1,0 +1,9 @@
+.toggle-category-questions {
+    min-height: 100px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
+}

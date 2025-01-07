@@ -8,7 +8,11 @@ class CategoriesService
 {
     public function getCategoriesList()
     {
-        return DB::table('categories')->select('categories.category_name')
-        ->where('')->get(); // Trả về kết quả
+        $query = DB::table('categories')->select(
+            'categories.id', 
+            'categories.category_name'
+        );
+        
+        return $query->get(); 
     }
 }

@@ -14,6 +14,10 @@ use App\Models\UserModel;
 use App\Models\categoriesModel;
 use App\Models\UserQuestionScore;
 use App\Models\UserScore;
+use App\Models\AdminQuestionScore;
+use App\Models\AdminScore;
+
+
 
 
 use Illuminate\Support\Facades\Auth;
@@ -235,9 +239,26 @@ class HomeController extends Controller
         }
     }
 
-    public function evaluation_management() {
-        $departments = $this->DepartmentsService->getDepartmentList();
+    public function evaluation_management(Request $request) {
+        $departmentId = $request->get('department_id');
+        $departments = $this->DepartmentsService->getDepartmentNotAdminList();
         $employees = $this->UserService->getEmployeeFullInfo();
+        $category_list = $this->CategoriesService->getCategoriesList();
+
+        $selectedDepartment = $departments->firstWhere('id', $departmentId);
+        $data['selectedDepartment'] = $selectedDepartment;
+        $data['selectedDepartmentId'] = $departmentId;
+        foreach ($category_list as &$category) {
+            $category->questions = $this->QuestionsService->getQuestions($category->id);
+        }
+
+        if ($departmentId) {
+            $employees = $employees->filter(function ($employee) use ($departmentId) {
+                return $employee->department_id == $departmentId;
+            });
+        }
+
+        $data['category_list'] = $category_list;
 
         foreach ($employees as $employee) {
             $employee->categories = $this->ScoreService->getScoresWithCategories($employee->id);
@@ -249,11 +270,67 @@ class HomeController extends Controller
         $data['departments'] = $departments;
         $data['employees'] = $employees;
         $data['content'] =  'home.content.evaluation_management';
-        $data['css_files'] = [];
+        $data['css_files'] = [
+            'css/home/reponsive.css',
+            'css/home/adminScores.css'
+        ];
         $data['js_files'] = [];
 
-        // dd($data);
+        // dd($data['employees']);
         
         return view('home/index', $data);
+    }
+
+    public function storeAdminScores(Request $request){
+    $adminId = Auth::user()->id; 
+    $scores = $request->input('questionScores'); 
+    // dd($scores);
+    foreach ($scores as $questionId => $employeeScores) {
+        foreach ($employeeScores as $userId => $score) {
+            $existingRecord = AdminQuestionScore::where('admin_id', $adminId)
+                ->where('user_id', $userId)
+                ->where('question_id', $questionId)
+                ->first();
+
+            if ($existingRecord) {
+                $existingRecord->update(['score' => $score]);
+            } else {
+                AdminQuestionScore::create([
+                    'admin_id' => $adminId,
+                    'user_id' => $userId,
+                    'question_id' => $questionId,
+                    'score' => $score,
+                ]);
+            }
+        }
+    }
+
+    $categoryScores = $request->input('categoryScores'); // Lấy điểm trung bình từ request
+
+    foreach ($categoryScores as $userId => $categories) {
+        foreach ($categories as $categoryId => $averageScore) {
+            // Kiểm tra xem bản ghi đã tồn tại hay chưa
+            $existingRecord = AdminScore::where('admin_id', $adminId)
+                ->where('user_id', $userId)
+                ->where('category_id', $categoryId)
+                ->first();
+
+            if ($existingRecord) {
+                // Update nếu tồn tại
+                $existingRecord->update(['average_score' => $averageScore]);
+            } else {
+                // Tạo mới nếu chưa tồn tại
+                AdminScore::create([
+                    'admin_id' => $adminId,
+                    'user_id' => $userId,
+                    'category_id' => $categoryId,
+                    'average_score' => $averageScore,
+                ]);
+            }
+        }
+    }
+
+    
+        return redirect()->back()->with('success', 'Dữ liệu đã được lưu thành công!');
     }
 }

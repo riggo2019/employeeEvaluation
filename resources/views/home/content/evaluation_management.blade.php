@@ -1,147 +1,163 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evaluation Management</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-          .criteria-column {
-            width: 30%; /* Đặt độ rộng cho cột Tiêu Chí */
-        }
-        .employee-column {
-            width: 8.75%; /* 70% / 8 columns = 8.75% each */
-            text-align: center;
-            vertical-align: middle;
-        }
-        table {
-            table-layout: fixed;
-            width: 100%;
-        }
-        .employee-column .form-control {
-            margin: 0 auto; /* Căn giữa theo chiều ngang */
-        }
-    </style>
-</head>
-<body>
-<div class="container mt-5">
-    <h2 class="text-center mb-4">Đánh Giá Dịch Vụ</h2>
-    <form action="#" method="POST">
-        <table class="table table-bordered table-hover">
-            <thead class="table-light">
-                <tr>
-                    <th rowspan="2" class="text-center align-middle">Hạng Mục</th>
-                    <th rowspan="2" class="text-center align-middle criteria-column">Tiêu Chí</th>
-                    <th colspan="8" class="text-center">Họ và Tên</th>
-                </tr>
-                <tr>
-                    <th class="employee-column">Lê Thị Phượng</th>
-                    <th class="employee-column">Nguyễn Thị Thom</th>
-                    <th class="employee-column">Hoàng Thị Yến</th>
-                    <th class="employee-column">Lê Gia Hệ</th>
-                    <th class="employee-column">Vương Thị Ánh</th>
-                    <th class="employee-column">Trần Văn Hà</th>
-                    <th class="employee-column">Ng.Vũ Nguyệt Hạ</th>
-                    <th class="employee-column">Đào Như Quỳnh</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td rowspan="7" class="text-center align-middle">Dịch vụ</td>
-                    <td>1. Nhìn nhận một cách khách quan thì nhân viên có nỗ lực làm khách hàng hài lòng và cảm động thông qua việc cung cấp dịch vụ một cách thân thiện và sự quan tâm không?</td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                </tr>
-                <tr>
-                    <td>2. Có nhận thức được về khả năng dịch vụ của bản thân và nỗ lực bao nhiêu để nâng cao khả năng dịch vụ của bản thân?</td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                </tr>
-                <tr>
-                    <td>3. Khi gặp khách hàng có vấn đề, có quản lý cảm xúc tốt và nỗ lực để tìm hiểu tâm lý của khách hàng không?</td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                </tr>
-                <tr>
-                    <td>4. Để có thể giải thích một cách logic cho khách hàng, nhân viên có nhận biết được điểm yếu của bản thân mình để khắc phục bằng cách giải thích/ hướng dẫn cụ thể, thông qua đó làm khách hàng thoải mái và cảm động không? </td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                </tr>
-                <tr>
-                    <td>5. Có biết được tiêu chuẩn (khách hàng) không và từ đó có nhận biết được mục tiêu, phương hương mong muốn để nỗ lực để cải thiện không?</td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                </tr>
-                <tr>
-                    <td>6. Khi có vấn đề, có chủ động xem xét nhận biết nguyên nhân là gì và tích cực tìm phương án xử lý hiệu quả không?</td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                </tr>
-                <tr>
-                    <td>7. Có nỗ lực sắp xếp thông tin và ghi nhớ khuôn mặt khách hàng để có thể tiếp đón một cách thân tình hay không?</td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                    <td><input type="number" class="form-control" min="0" max="10"></td>
-                </tr>
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="2" class="text-center"><strong>Điểm Trung Bình Theo Hạng Mục</strong></td>
-                    <td><input type="text" class="form-control text-center" disabled></td>
-                    <td><input type="text" class="form-control text-center" disabled></td>
-                    <td><input type="text" class="form-control text-center" disabled></td>
-                    <td><input type="text" class="form-control text-center" disabled></td>
-                    <td><input type="text" class="form-control text-center" disabled></td>
-                    <td><input type="text" class="form-control text-center" disabled></td>
-                    <td><input type="text" class="form-control text-center" disabled></td>
-                    <td><input type="text" class="form-control text-center" disabled></td>
-                </tr>
-            </tfoot>
-        </table>
-        
+<div class="container py-4">
+    <div class="d-flex flex-row justify-content-center gap-3 mb-3">
+        @foreach ($departments as $department)
+            <a href="{{ route('evaluation_management', ['department_id' => $department->id]) }}" 
+               class="btn {{ $selectedDepartmentId == $department->id ? 'btn-primary' : 'btn-secondary'}}">
+                {{ $department->department_name }}
+            </a>
+        @endforeach
+    </div>
+    <h2 class="text-center mb-4">Đánh Giá Nhân Viên - {{ $selectedDepartment ? 'Khối: '. $selectedDepartment->department_name : 'Tất cả'}}</h2>
+    <form action="{{ route('storeAdminScores') }}" method="POST">
+        @csrf
+        <div class="row border bg-light">
+            <div class="col-2 align-self-center text-center p-2">Hạng Mục</div>
+            <div class="col-10">
+                <div class="row">
+                    <div class="col-5 align-self-center border-start border-end text-center p-2">Tiêu chí</div>
+                    <div class="col-7">
+                        <div class="row p-2">
+                            @foreach ($employees as $employee)
+                                <div class="col-3 text-center border-end">{{ $employee->full_name }}</div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="catrgory_list">
+            @foreach ($category_list as $category)
+                <div class="row mt-3 border" data-category="{{ $category->id }}">
+                    <div class="col-2 align-self-start text-center px-3 pt-1 toggle-category-questions">
+                        <p class="mb-0">{{ $category->category_name }}</p>
+                        <span class="material-icons border w-100">keyboard_arrow_up</span>
+                    </div>
+                    <div class="col-10">
+                        <div class="question-container">
+                            @foreach ($category->questions as $question)
+                                <div class="row">
+                                    <div class="col-5 d-flex align-items-center border p-3" style="height:150px">
+                                        {{ $question->question_content }}</div>
+                                    <div class="col-7">
+                                        <div class="row" style="height: 100%">
+                                            @foreach ($employees as $employee)
+                                                <div class="col-3 text-center border-end border-bottom p-2">
+                                                    <input type="text" class="text-center point-input"
+                                                        style="width:100%;height:100%;"
+                                                        name="questionScores[{{ $employee->id }}][{{ $question->id }}]"
+                                                        data-category="{{ $category->id }}"
+                                                        data-user="{{ $employee->id }}">
+                                                </div>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <div class="row">
+                            <div class="col-5 d-flex align-items-center border" style="height:100px">ĐIỂM TRUNG BÌNH
+                                THEO
+                                HẠNG MỤC</div>
+                            <div class="col-7">
+                                <div class="row" style="height: 100%">
+                                    @foreach ($employees as $employee)
+                                        <div class="col-3 text-center border-end p-2">
+                                            <input type="text" class="text-center" style="width:100%;height:100%;"
+                                                name="categoryScores[{{ $employee->id }}][{{ $category->id }}]"
+                                                readonly>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        <button class="text-center w-30 btn btn-primary mt-3"type="submit">Lưu điểm đánh giá</button>
     </form>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<script>
+    var employees = @json($employees);
+
+
+
+    $(document).ready(function() {
+        $('.toggle-category-questions').on('click', function () {
+            $(this).next('.col-10').find('.question-container').toggle();
+            var icon = $(this).find('span');
+            if (icon.text() === 'keyboard_arrow_up') {
+                icon.text('keyboard_arrow_down')
+            } else {
+                icon.text('keyboard_arrow_up')
+            }
+        })
+
+        $('.point-input').on('click input', function() {
+            if (parseInt($(this).val()) < 0 || parseInt($(this).val()) > 100 || isNaN($(this).val())) {
+                $(this).val('');
+                showToast('Chỉ cho phép nhập điểm từ 0 tới 100', 'danger');
+            }
+            let total = 0,
+                count = 0;
+
+            $('.point-input').each(function() {
+                const value = parseInt($(this).val(), 10);
+                if (!isNaN(value)) {
+                    total += value;
+                    count++;
+                }
+            });
+
+            const average = count > 0 ? (total / count).toFixed(2) : 0;
+            $('#avgPoint').text(`Trung bình: ${average}`);
+        });
+
+        $('.point-input').trigger('input');
+
+        // Hàm tính điểm trung bình
+        function calculateAverages() {
+            // Lặp qua từng category
+            $('[data-category]').each(function() {
+                const categoryId = $(this).data('category');
+
+                // Lấy các ô input thuộc category hiện tại
+                const rows = $(this).find('input[name^="questionScores"]');
+                const employeeScores = {};
+
+                // Gom điểm theo từng user
+                rows.each(function() {
+                    const userId = $(this).data('user');
+                    const value = $(this).val().trim(); // Lấy giá trị
+
+                    if (value !== "") {
+                        const score = parseFloat(value) || 0;
+
+                        if (!employeeScores[userId]) {
+                            employeeScores[userId] = [];
+                        }
+                        employeeScores[userId].push(score);
+                    }
+                });
+
+                // Tính trung bình cho từng user
+                for (const userId in employeeScores) {
+                    const scores = employeeScores[userId];
+                    const total = scores.reduce((a, b) => a + b, 0);
+                    const average = scores.length > 0 ? (total / scores.length).toFixed(2) : "";
+
+                    // Gán giá trị vào ô input trung bình
+                    $(`input[name="categoryScores[${userId}][${categoryId}]"]`).val(average);
+                }
+            });
+        }
+
+        // Gọi hàm khi có thay đổi
+        $('form').on('input', 'input[name^="questionScores"]', function() {
+            calculateAverages();
+        });
+
+        // Tính trung bình ban đầu
+        calculateAverages();
+    });
+</script>

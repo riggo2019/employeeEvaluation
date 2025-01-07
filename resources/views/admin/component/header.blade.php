@@ -3,6 +3,6 @@
         <i class="fas fa-bars"></i>
     </a>
     <div class="tools">
-        
+        <a href="{{ route('home.index') }}">Về trang chủ</a>
     </div>
 </header>

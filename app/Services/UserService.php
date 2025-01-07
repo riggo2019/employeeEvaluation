@@ -27,7 +27,7 @@ class UserService
     {
         $query = DB::table('users')->select(
             'users.*',
-            'departments.*',
+            'departments.department_name',
             DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS full_name"),
             DB::raw("DATE_FORMAT(users.start_date, '%d/%m/%Y') AS formatted_start_date")
         )

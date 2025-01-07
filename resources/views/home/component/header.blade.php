@@ -3,17 +3,17 @@
         <img src="{{ asset('image/logo1.png') }}" alt="logo" height="50px">
     </a>
     <ul class="nav col-md-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="{{ route('home.index') }}" class="nav-link px-4 link-secondary">Trang chủ</a></li>
+        <li><a href="{{ route('home.index') }}" class="nav-link px-4 {{ $content == 'home.content.home' ? 'link-primary fw-bold' : 'link-secondary'}}">Trang chủ</a></li>
         @if (Auth::check() && Auth::user()->is_admin == 1)
-            <li><a href="{{ route('admin.index') }}" class="nav-link px-4 link-dark">Trang quản lý</a></li>
+            <li><a href="{{ route('admin.index') }}" class="nav-link px-4 link-secondary">Trang quản lý</a></li>
         @else
             @if(Auth::user()->answered == 1)
-                <li><a href="{{ route('home.results') }}" class="nav-link px-4 link-dark">Trang kết quả</a></li>
+                <li><a href="{{ route('home.results') }}" class="nav-link px-4 {{ $content == 'home.content.results' ? 'link-primary fw-bold' : 'link-secondary'}}">Trang kết quả</a></li>
             @else
-                <li><a href="{{ route('home.answer') }}" class="nav-link px-4 link-dark">Trả lời câu hỏi</a></li>
+                <li><a href="{{ route('home.answer') }}" class="nav-link px-4 {{ $content == 'home.content.answer' ? 'link-primary fw-bold' : 'link-secondary'}}">Trả lời câu hỏi</a></li>
             @endif
         @endif
-        <li><a href="{{ route('evaluation_management') }}" class="nav-link px-4 link-secondary">Quản lý đánh giá</a></li>
+        <li><a href="{{ route('evaluation_management', ['department_id' => 1]) }}" class="nav-link px-4 {{ $content == 'home.content.evaluation_management' ? 'link-primary fw-bold' : 'link-secondary'}}">Quản lý đánh giá</a></li>
     </ul>
 
 
