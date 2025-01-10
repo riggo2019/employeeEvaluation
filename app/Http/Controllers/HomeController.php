@@ -241,6 +241,7 @@ class HomeController extends Controller
 
     public function evaluation_management(Request $request) {
         $departmentId = $request->get('department_id');
+
         $departments = $this->DepartmentsService->getDepartmentNotAdminList();
         $employees = $this->UserService->getEmployeeFullInfo();
         $category_list = $this->CategoriesService->getCategoriesList();
@@ -248,6 +249,7 @@ class HomeController extends Controller
         $selectedDepartment = $departments->firstWhere('id', $departmentId);
         $data['selectedDepartment'] = $selectedDepartment;
         $data['selectedDepartmentId'] = $departmentId;
+
         foreach ($category_list as &$category) {
             $category->questions = $this->QuestionsService->getQuestions($category->id);
         }
@@ -267,6 +269,16 @@ class HomeController extends Controller
                 $category->question_scores = $this->ScoreService->getListOfScore($category->category_id, $category->user_id);
             }
         }
+
+        $data['admin_question_scores'] = DB::table('admin_question_scores')
+        ->select('admin_question_scores.*')
+        ->get();
+
+        $data['admin_scores'] = DB::table('admin_scores')
+        ->select('admin_scores.*')
+        ->get();
+
+
         $data['departments'] = $departments;
         $data['employees'] = $employees;
         $data['content'] =  'home.content.evaluation_management';
@@ -276,7 +288,7 @@ class HomeController extends Controller
         ];
         $data['js_files'] = [];
 
-        // dd($data['employees']);
+        // dd($data['admin_scores']);
         
         return view('home/index', $data);
     }
@@ -285,8 +297,8 @@ class HomeController extends Controller
     $adminId = Auth::user()->id; 
     $scores = $request->input('questionScores'); 
     // dd($scores);
-    foreach ($scores as $questionId => $employeeScores) {
-        foreach ($employeeScores as $userId => $score) {
+    foreach ($scores as $userId => $employeeScores) {
+        foreach ($employeeScores as $questionId => $score) {
             $existingRecord = AdminQuestionScore::where('admin_id', $adminId)
                 ->where('user_id', $userId)
                 ->where('question_id', $questionId)

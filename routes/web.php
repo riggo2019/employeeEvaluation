@@ -36,6 +36,7 @@ Route::prefix('admin')->middleware(AuthenticateMiddleware::class)->group(functio
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
     Route::get('/addUsers', [AdminController::class, 'addUsers'])->name('admin.addUsers');
+    Route::get('/scoreListbyCategory', [AdminController::class, 'scoreListbyCategory'])->name('admin.scoreListbyCategory');
     
     Route::post('/storeUsers', [AdminController::class, 'storeUsers'])->name('admin.storeUsers');
 });

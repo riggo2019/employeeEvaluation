@@ -28,17 +28,17 @@
             <a href="javascript::void(0)" class="dash-nav-item dash-nav-dropdown-toggle">
                 <i class="fas fa-users"></i>Tổng hợp bộ phận</a>
             <div class="dash-nav-dropdown-menu">
-                <a href="user-list.html" class="dash-nav-dropdown-item">Lễ Tân</a>
-                <a href="user-add.html" class="dash-nav-dropdown-item">Điều dưỡng</a>
-                <a href="user-add.html" class="dash-nav-dropdown-item">Kỹ thuật viên</a>
-                <a href="user-add.html" class="dash-nav-dropdown-item">Khối Hành chính</a>
+                <a href="{{ route('admin.scoreListbyCategory', ['department_id' => 1]) }}" class="dash-nav-dropdown-item">Phiên dịch, Điều phối</a>
+                <a href="{{ route('admin.scoreListbyCategory', ['department_id' => 2]) }}" class="dash-nav-dropdown-item">Điều dưỡng</a>
+                <a href="{{ route('admin.scoreListbyCategory', ['department_id' => 3]) }}" class="dash-nav-dropdown-item">Kỹ thuật viên</a>
+                <a href="{{ route('admin.scoreListbyCategory', ['department_id' => 4]) }}" class="dash-nav-dropdown-item">Khối Hành chính</a>
             </div>
         </div>
         <div class="dash-nav-dropdown">
             <a href="javascript::void(0)" class="dash-nav-item dash-nav-dropdown-toggle">
                 <i class="fas fa-user"></i></i>Tổng hợp cá nhân</a>
             <div class="dash-nav-dropdown-menu">
-                <a href="user-list.html" class="dash-nav-dropdown-item">Lễ Tân</a>
+                <a href="user-list.html" class="dash-nav-dropdown-item">Phiên dịch, Điều phối</a>
                 <a href="user-add.html" class="dash-nav-dropdown-item">Điều dưỡng</a>
                 <a href="user-add.html" class="dash-nav-dropdown-item">Kỹ thuật viên</a>
                 <a href="user-add.html" class="dash-nav-dropdown-item">Khối Hành chính</a>

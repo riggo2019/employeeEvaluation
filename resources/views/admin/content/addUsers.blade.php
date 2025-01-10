@@ -1,5 +1,4 @@
 <div class="container-fluid">
-    <h1 class="dash-title">{{ $title }}</h1>
     <div class="row">
         <div class="col-xl-12">
             <div class="card easion-card">

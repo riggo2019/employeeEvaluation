@@ -1,13 +1,14 @@
 <div class="container py-4">
     <div class="d-flex flex-row justify-content-center gap-3 mb-3">
         @foreach ($departments as $department)
-            <a href="{{ route('evaluation_management', ['department_id' => $department->id]) }}" 
-               class="btn {{ $selectedDepartmentId == $department->id ? 'btn-primary' : 'btn-secondary'}}">
+            <a href="{{ route('evaluation_management', ['department_id' => $department->id]) }}"
+                class="btn {{ $selectedDepartmentId == $department->id ? 'btn-primary' : 'btn-secondary' }}">
                 {{ $department->department_name }}
             </a>
         @endforeach
     </div>
-    <h2 class="text-center mb-4">Đánh Giá Nhân Viên - {{ $selectedDepartment ? 'Khối: '. $selectedDepartment->department_name : 'Tất cả'}}</h2>
+    <h2 class="text-center mb-4">Đánh Giá Nhân Viên -
+        {{ $selectedDepartment ? 'Khối: ' . $selectedDepartment->department_name : 'Tất cả' }}</h2>
     <form action="{{ route('storeAdminScores') }}" method="POST">
         @csrf
         <div class="row border bg-light">
@@ -46,7 +47,12 @@
                                                         style="width:100%;height:100%;"
                                                         name="questionScores[{{ $employee->id }}][{{ $question->id }}]"
                                                         data-category="{{ $category->id }}"
-                                                        data-user="{{ $employee->id }}">
+                                                        data-user="{{ $employee->id }}"
+                                                        @foreach ($admin_question_scores as $admin_question_score)
+                                                            @if ($admin_question_score->question_id == $question->id && $admin_question_score->user_id == $employee->id)
+                                                                value="{{ $admin_question_score->score }}"
+                                                            @endif 
+                                                        @endforeach>
                                                 </div>
                                             @endforeach
                                         </div>
@@ -64,6 +70,11 @@
                                         <div class="col-3 text-center border-end p-2">
                                             <input type="text" class="text-center" style="width:100%;height:100%;"
                                                 name="categoryScores[{{ $employee->id }}][{{ $category->id }}]"
+                                                @foreach ($admin_scores as $admin_score)
+                                                    @if ($admin_score->category_id == $category->id && $admin_score->user_id == $employee->id)
+                                                        value="{{ $admin_score->average_score }}"
+                                                    @endif 
+                                                @endforeach
                                                 readonly>
                                         </div>
                                     @endforeach
@@ -79,11 +90,8 @@
 </div>
 <script>
     var employees = @json($employees);
-
-
-
     $(document).ready(function() {
-        $('.toggle-category-questions').on('click', function () {
+        $('.toggle-category-questions').on('click', function() {
             $(this).next('.col-10').find('.question-container').toggle();
             var icon = $(this).find('span');
             if (icon.text() === 'keyboard_arrow_up') {

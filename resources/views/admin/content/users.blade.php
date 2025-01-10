@@ -1,4 +1,3 @@
-<h1 class="dash-title">{{ $title ?? '' }}</h1>
 <div class="row">
     <div class="col-lg-12">
         <div class="card easion-card">
