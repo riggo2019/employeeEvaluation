@@ -6,13 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 
-class questionTypeModel extends Model
+class AdminScore extends Model
 {
     use HasFactory, Notifiable;
 
-    protected $table = 'question_types';
+    protected $table = 'admin_scores';
 
-    protected $fillable = [
-        'type_name',
-    ];
+    protected $fillable = ['admin_id', 'user_id', 'category_id', 'average_score'];
 }

@@ -8987,7 +8987,7 @@ body {
   -webkit-flex-grow: 2;
       -ms-flex-positive: 2;
           flex-grow: 2;
-  margin-top: 84px; }
+  margin-top: 70px; }
   @media (min-width: 992px) {
     .dash-app {
       margin-left: 238px; }
@@ -9107,7 +9107,7 @@ body {
           display: flex; } }
     .dash-nav header .easion-logo {
       margin-right: auto;
-      padding-right: 42px; }
+      padding-right: 10px; }
   .dash-nav a {
     color: #515151; }
     .dash-nav a:hover {

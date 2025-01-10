@@ -1,10 +1,10 @@
 nav {
     position: relative;
-    min-height: 100vh;
+    min-height: calc(100% - 84px);
 }
 
 nav a.logout-option {
-    position: fixed;
+    position: absolute;
     bottom: 0px;
     left: 0;
     right: 0;
@@ -12,4 +12,24 @@ nav a.logout-option {
 
 .dataTables_wrapper .dataTables_length {
     display: none;
+}
+
+.admin-logo {
+    width: 50px;
+    padding-right: 10px;
+}
+
+.group-items {
+    overflow: hidden;
+    white-space: nowrap;
+    width: 0; 
+    transition: width 0.3s ease-in-out; 
+}
+
+.group-items.active {
+    width: 100%;
+}
+
+.group-items a {
+    min-width: 200px;
 }

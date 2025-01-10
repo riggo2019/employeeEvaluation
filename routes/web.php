@@ -22,13 +22,21 @@ Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::prefix('/')->middleware(AuthenticateMiddleware::class)->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home.index');
     Route::get('/answer', [HomeController::class, 'answer'])->name('home.answer');
-    Route::get('/results', [HomeController::class, 'showResults']);
+    Route::get('/results', [HomeController::class, 'showResults'])->name('home.results');
+    Route::get('/evaluation_management', [HomeController::class, 'evaluation_management'])->name('evaluation_management');
+
     Route::post('/loadView', [HomeController::class, 'loadView']);
+    Route::post('/storeAdminScores', [HomeController::class, 'storeAdminScores'])->name('storeAdminScores');
     Route::post('/storeScore', [HomeController::class, 'storeScore']);
+
 });
 
 // Middleware và prefix cho admin
 Route::prefix('admin')->middleware(AuthenticateMiddleware::class)->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
     Route::get('/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::get('/addUsers', [AdminController::class, 'addUsers'])->name('admin.addUsers');
+    Route::get('/scoreListbyCategory', [AdminController::class, 'scoreListbyCategory'])->name('admin.scoreListbyCategory');
+    
+    Route::post('/storeUsers', [AdminController::class, 'storeUsers'])->name('admin.storeUsers');
 });
