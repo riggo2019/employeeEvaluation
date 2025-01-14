@@ -12,6 +12,6 @@
 @endif
 <link rel="stylesheet" href="{{ asset("/css/bootstrap/bootstrap.min.css") }}">
 <link rel="stylesheet" href="{{ asset("/css/home/style.css") }}">
-<title>Website đánh giá nhân viên</title>
+<title>{{ $title }}</title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 

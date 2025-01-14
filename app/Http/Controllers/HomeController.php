@@ -16,6 +16,8 @@ use App\Models\UserQuestionScore;
 use App\Models\UserScore;
 use App\Models\AdminQuestionScore;
 use App\Models\AdminScore;
+use App\Models\QuestionTranslation;
+use App\Models\Question;
 
 
 
@@ -31,12 +33,13 @@ class HomeController extends Controller
     protected $DepartmentsService;
     protected $CategoriesService;
 
-    public function __construct(QuestionsService $QuestionsService, 
-                                ScoreService $ScoreService, 
-                                UserService $UserService,
-                                CategoriesService $CategoriesService,
-                                DepartmentsService $DepartmentsService)
-    {
+    public function __construct(
+        QuestionsService $QuestionsService,
+        ScoreService $ScoreService,
+        UserService $UserService,
+        CategoriesService $CategoriesService,
+        DepartmentsService $DepartmentsService
+    ) {
         $this->QuestionsService = $QuestionsService;
         $this->ScoreService = $ScoreService;
         $this->UserService = $UserService;
@@ -53,6 +56,7 @@ class HomeController extends Controller
         $data['css_files'] = [
             '/css/home/home.css',
         ];
+        $data['title'] = __('messages.default_title');
         $data['js_files'] = [
             '/js/home/slider.js',
         ];
@@ -63,8 +67,13 @@ class HomeController extends Controller
     {
         // $questions = $this->QuestionsService->getQuestionsByCategory(2);
         // dd($questions);
-        $data['category_list'] = categoriesModel::all();
+        $data['category_list'] = DB::table('categories')
+        ->join('category_translations', 'categories.id', '=', 'category_translations.category_id')
+        ->where('category_translations.locale', app()->getLocale())
+        ->select('categories.id', 'category_translations.category_name')
+        ->get();
         $data['content'] =  'home.content.answer';
+        $data['title'] = __('messages.answer');
         $data['css_files'] = [
             '/css/home/form.css',
         ];
@@ -79,7 +88,11 @@ class HomeController extends Controller
     {
         $viewType = $request->input('viewType');
 
-        $category_list = categoriesModel::all();
+        $category_list = DB::table('categories')
+        ->join('category_translations', 'categories.id', '=', 'category_translations.category_id')
+        ->where('category_translations.locale', app()->getLocale())
+        ->select('categories.id', 'category_translations.category_name')
+        ->get();
 
         $categoriesArray = $category_list->mapWithKeys(function ($category) {
             return [
@@ -99,7 +112,16 @@ class HomeController extends Controller
         }
 
         $category = $categoriesArray[$viewType];
-        $data['questions'] = $this->QuestionsService->getQuestionsByCategory($category['category_id']);
+        // $data['questions'] = $this->QuestionsService->getQuestionsByCategory($category['category_id']);
+
+        $questions = DB::table('questions')
+            ->join('question_translations', 'questions.id', '=', 'question_translations.question_id')
+            ->where('questions.category_id', '=', $category['category_id'])
+            ->where('question_translations.locale', app()->getLocale())
+            ->select('questions.id as question_id', 'question_translations.question_content')
+            ->get();
+
+        $data['questions'] =  $questions;
         $data['category_name'] = $category['name'];
         $data['viewType'] = $viewType;
         $data['nextViewType'] = $viewType + 1;
@@ -135,7 +157,7 @@ class HomeController extends Controller
     public function storeScore(Request $request)
     {
         $userModel = new UserModel();
-        if(Auth::check()){
+        if (Auth::check()) {
             $userId = Auth::user()->id; // ID người dùng (hoặc sử dụng `auth()->id()` nếu có hệ thống xác thực)
         }
         $scores = $request->input('scores');
@@ -175,15 +197,13 @@ class HomeController extends Controller
                 );
             }
             $is_update = UserModel::where('id', $userId)->update(['answered' => 1]);
-            
-            if($is_update){
+
+            if ($is_update) {
                 return response()->json([
                     'status' => true,
                     'message' => 'Scores saved successfully!',
                 ]);
             }
-
-            
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
@@ -195,10 +215,10 @@ class HomeController extends Controller
 
     public function showResults()
     {
-        if(Auth::check()){
-            $userId = Auth::user()->id; 
+        if (Auth::check()) {
+            $userId = Auth::user()->id;
         }
-        
+
         $scores = $this->ScoreService->getScoresWithCategories($userId);
         $user = $this->UserService->getUserFullInfo($userId);
 
@@ -219,6 +239,7 @@ class HomeController extends Controller
         ];
 
         $data['content'] =  'home.content.results';
+        $data['title'] = __('messages.result');
         $data['css_files'] = [];
         $data['js_files'] = [];
         return view('home/index', $data);
@@ -239,19 +260,33 @@ class HomeController extends Controller
         }
     }
 
-    public function evaluation_management(Request $request) {
+    public function evaluation_management(Request $request)
+    {
         $departmentId = $request->get('department_id');
 
-        $departments = $this->DepartmentsService->getDepartmentNotAdminList();
+        $departments = DB::table('departments')
+        ->join('department_translations', 'departments.id', '=', 'department_translations.department_id')
+        ->where('department_translations.locale', app()->getLocale())
+        ->select('departments.id', 'department_translations.department_name')
+        ->get();
         $employees = $this->UserService->getEmployeeFullInfo();
-        $category_list = $this->CategoriesService->getCategoriesList();
+        $category_list = DB::table('categories')
+        ->join('category_translations', 'categories.id', '=', 'category_translations.category_id')
+        ->where('category_translations.locale', app()->getLocale())
+        ->select('categories.id', 'category_translations.category_name')
+        ->get();
 
         $selectedDepartment = $departments->firstWhere('id', $departmentId);
         $data['selectedDepartment'] = $selectedDepartment;
         $data['selectedDepartmentId'] = $departmentId;
 
         foreach ($category_list as &$category) {
-            $category->questions = $this->QuestionsService->getQuestions($category->id);
+            $category->questions = DB::table('questions')
+                ->join('question_translations', 'questions.id', '=', 'question_translations.question_id')
+                ->where('questions.category_id', '=', $category->id)
+                ->where('question_translations.locale', app()->getLocale())
+                ->select('questions.id', 'question_translations.question_content')
+                ->get();
         }
 
         if ($departmentId) {
@@ -271,15 +306,16 @@ class HomeController extends Controller
         }
 
         $data['admin_question_scores'] = DB::table('admin_question_scores')
-        ->select('admin_question_scores.*')
-        ->get();
+            ->select('admin_question_scores.*')
+            ->get();
 
         $data['admin_scores'] = DB::table('admin_scores')
-        ->select('admin_scores.*')
-        ->get();
+            ->select('admin_scores.*')
+            ->get();
 
 
         $data['departments'] = $departments;
+        $data['title'] = __('messages.evaluation_management');
         $data['employees'] = $employees;
         $data['content'] =  'home.content.evaluation_management';
         $data['css_files'] = [
@@ -289,60 +325,61 @@ class HomeController extends Controller
         $data['js_files'] = [];
 
         // dd($data['admin_scores']);
-        
+
         return view('home/index', $data);
     }
 
-    public function storeAdminScores(Request $request){
-    $adminId = Auth::user()->id; 
-    $scores = $request->input('questionScores'); 
-    // dd($scores);
-    foreach ($scores as $userId => $employeeScores) {
-        foreach ($employeeScores as $questionId => $score) {
-            $existingRecord = AdminQuestionScore::where('admin_id', $adminId)
-                ->where('user_id', $userId)
-                ->where('question_id', $questionId)
-                ->first();
+    public function storeAdminScores(Request $request)
+    {
+        $adminId = Auth::user()->id;
+        $scores = $request->input('questionScores');
+        // dd($scores);
+        foreach ($scores as $userId => $employeeScores) {
+            foreach ($employeeScores as $questionId => $score) {
+                $existingRecord = AdminQuestionScore::where('admin_id', $adminId)
+                    ->where('user_id', $userId)
+                    ->where('question_id', $questionId)
+                    ->first();
 
-            if ($existingRecord) {
-                $existingRecord->update(['score' => $score]);
-            } else {
-                AdminQuestionScore::create([
-                    'admin_id' => $adminId,
-                    'user_id' => $userId,
-                    'question_id' => $questionId,
-                    'score' => $score,
-                ]);
+                if ($existingRecord) {
+                    $existingRecord->update(['score' => $score]);
+                } else {
+                    AdminQuestionScore::create([
+                        'admin_id' => $adminId,
+                        'user_id' => $userId,
+                        'question_id' => $questionId,
+                        'score' => $score,
+                    ]);
+                }
             }
         }
-    }
 
-    $categoryScores = $request->input('categoryScores'); // Lấy điểm trung bình từ request
+        $categoryScores = $request->input('categoryScores'); // Lấy điểm trung bình từ request
 
-    foreach ($categoryScores as $userId => $categories) {
-        foreach ($categories as $categoryId => $averageScore) {
-            // Kiểm tra xem bản ghi đã tồn tại hay chưa
-            $existingRecord = AdminScore::where('admin_id', $adminId)
-                ->where('user_id', $userId)
-                ->where('category_id', $categoryId)
-                ->first();
+        foreach ($categoryScores as $userId => $categories) {
+            foreach ($categories as $categoryId => $averageScore) {
+                // Kiểm tra xem bản ghi đã tồn tại hay chưa
+                $existingRecord = AdminScore::where('admin_id', $adminId)
+                    ->where('user_id', $userId)
+                    ->where('category_id', $categoryId)
+                    ->first();
 
-            if ($existingRecord) {
-                // Update nếu tồn tại
-                $existingRecord->update(['average_score' => $averageScore]);
-            } else {
-                // Tạo mới nếu chưa tồn tại
-                AdminScore::create([
-                    'admin_id' => $adminId,
-                    'user_id' => $userId,
-                    'category_id' => $categoryId,
-                    'average_score' => $averageScore,
-                ]);
+                if ($existingRecord) {
+                    // Update nếu tồn tại
+                    $existingRecord->update(['average_score' => $averageScore]);
+                } else {
+                    // Tạo mới nếu chưa tồn tại
+                    AdminScore::create([
+                        'admin_id' => $adminId,
+                        'user_id' => $userId,
+                        'category_id' => $categoryId,
+                        'average_score' => $averageScore,
+                    ]);
+                }
             }
         }
-    }
 
-    
+
         return redirect()->back()->with('success', 'Dữ liệu đã được lưu thành công!');
     }
 }

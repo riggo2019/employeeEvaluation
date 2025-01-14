@@ -64,11 +64,21 @@ class AdminController extends Controller
 
     public function users()
     {
-        $users = $this->UserService->getUserFullInfo();
+        $users = DB::table('users')
+            ->join('departments', 'departments.id', '=', 'users.department_id')
+            ->join('department_translations', 'departments.id', '=', 'department_translations.department_id')
+            ->where('department_translations.locale', app()->getLocale())
+            ->select(
+                'users.*',
+                DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS full_name"),
+                'department_translations.department_name',
+                DB::raw("DATE_FORMAT(users.start_date, '%d/%m/%Y') AS formatted_start_date")
+            )
+            ->get();
 
         $data['users'] = $users;
         $data['content'] =  'admin.content.users';
-        $data['title'] =  'Quản lý nhân viên';
+        $data['title'] =  __('admin.employee_manager');
         $data['css_files'] = [
             '/css/admin/admin.css',
         ];
@@ -82,9 +92,13 @@ class AdminController extends Controller
 
     public function addUsers()
     {
-        $data['departments'] = departmentsModel::all();
+        $data['departments'] = DB::table('departments')
+            ->join('department_translations', 'departments.id', '=', 'department_translations.department_id')
+            ->where('department_translations.locale', app()->getLocale())
+            ->select('departments.id', 'department_translations.department_name')
+            ->get();
         $data['content'] =  'admin.content.addUsers';
-        $data['title'] =  'Quản lý nhân viên > Thêm nhân viên';
+        $data['title'] =  __('admin.employee_manager') . ' > ' . __('admin.add_employee');
         $data['css_files'] = [
             '/css/admin/admin.css',
         ];
@@ -107,6 +121,84 @@ class AdminController extends Controller
             return redirect()->route('admin.users')->with('success', 'Thêm nhân viên thành công.');
         } else {
             return redirect()->route('admin.addUsers')->with('error', 'Thêm nhân viên thất bại');
+        }
+    }
+
+    public function editUsers($id)
+    {
+        $user = DB::table('users')
+            ->join('departments', 'departments.id', '=', 'users.department_id')
+            ->join('department_translations', 'departments.id', '=', 'department_translations.department_id')
+            ->where('department_translations.locale', app()->getLocale())
+            ->where('users.id', $id)
+            ->select(
+                'users.*',
+                DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS full_name"),
+                'department_translations.department_name',
+                DB::raw("DATE_FORMAT(users.start_date, '%d/%m/%Y') AS formatted_start_date")
+            )
+            ->first();
+        if (!$user) {
+            return redirect()->route('admin.users')->with('error', 'Nhân viên không tồn tại.');
+        }
+
+        $data['departments'] = DB::table('departments')
+        ->join('department_translations', 'departments.id', '=', 'department_translations.department_id')
+        ->where('department_translations.locale', app()->getLocale())
+        ->select('departments.id', 'department_translations.department_name')
+        ->get();
+        $data['user'] = $user;
+        $data['content'] =  'admin.content.editUsers';
+        $data['title'] =  __('admin.employee_manager') . ' > ' . __('admin.edit_employee');
+        $data['css_files'] = [
+            '/css/admin/admin.css',
+        ];
+        $data['js_files'] = [
+            '/js/admin/users.js',
+        ];
+        // dd($data);
+
+        return view('admin/index', $data);
+    }
+
+    public function saveUsers(AddUserRequest $request)
+    {
+        $id = request('id');
+        $data = request()->only('first_name', 'last_name', 'user_name', 'department_id', 'is_admin');
+        if (request('start_date')) {
+            $data['start_date'] = date('Y-m-d', strtotime(request('start_date')));
+        }
+        if (request('isChangePassword')) {
+            $request->validate([
+                'password' => 'required|confirmed|min:6',
+            ]);
+            $data['password'] = Hash::make(request('password'));
+        }
+        $user = UserModel::find($id);
+
+        if ($user) {
+            $user->update($data);
+            return redirect()->route('admin.users')->with('success', 'Thêm nhân viên thành công.');
+        } else {
+            return redirect()->back()->with('error', 'Người dùng không tồn tại.');
+        }
+    }
+
+    public function deleteUser($id)
+    {
+        // Tìm user theo ID
+        $user = UserModel::find($id);
+
+        // Kiểm tra nếu user tồn tại
+        if ($user) {
+            // Xóa user
+            $user->delete();
+
+            // Thông báo thành công
+            return redirect()->route('admin.users')->with('success', 'Xóa nhân viên thành công.');
+        } else {
+            // Nếu không tìm thấy user, thông báo lỗi
+            return redirect()->route('admin.users')->with('error', 'Người dùng không tồn tại.');
         }
     }
 
@@ -134,7 +226,7 @@ class AdminController extends Controller
         $category_list = $this->CategoriesService->getCategoriesList();
 
         $selectedDepartment = $departments->firstWhere('id', $departmentId);
-        
+
 
         foreach ($category_list as &$category) {
             $category->questions = $this->QuestionsService->getQuestions($category->id);
@@ -146,7 +238,7 @@ class AdminController extends Controller
             });
         }
 
-        
+
 
         foreach ($employees as $employee) {
             $employee->categories = $this->ScoreService->getScoresWithCategories($employee->id);
@@ -249,7 +341,7 @@ class AdminController extends Controller
         $employees = $employees->sort(function ($a, $b) use ($usersWithScores) {
             $rankA = null;
             $rankB = null;
-        
+
             foreach ($usersWithScores as $score) {
                 if ($score['user_id'] === $a->id) {
                     $rankA = $score['ranking'];
@@ -258,7 +350,7 @@ class AdminController extends Controller
                     $rankB = $score['ranking'];
                 }
             }
-        
+
             // Sắp xếp theo thứ hạng tăng dần (ranking)
             if ($rankA === null) return 1; // User không có rank sẽ nằm cuối
             if ($rankB === null) return -1;
@@ -285,5 +377,37 @@ class AdminController extends Controller
         // print_r(json_encode($usersWithScores));
         // exit();
         return view('admin/index', $data);
+    }
+
+    public function scoreListByEmployee(Request $request, $department_id)
+    {
+        $user_id = $request->get('user_id');
+
+        $departments = $this->DepartmentsService->getDepartmentNotAdminList();
+        $employees = $this->UserService->getEmployeeFullInfo();
+        $category_list = $this->CategoriesService->getCategoriesList();
+
+        foreach ($category_list as &$category) {
+            $category->questions = $this->QuestionsService->getQuestions($category->id);
+        }
+
+        if ($department_id) {
+            $employees = $employees->filter(function ($employee) use ($department_id) {
+                return $employee->department_id == $department_id;
+            });
+        }
+
+        if ($user_id) {
+            $selectedEmployee = $employees->filter(function ($employee) use ($user_id) {
+                return $employee->id == $user_id;
+            });
+        }
+
+        $data['selectedEmployee'] = $selectedEmployee ?? [];
+        $data['employees'] = $employees;
+        $data['departments'] = $departments;
+        $data['category_list'] = $category_list;
+
+        dd($data);
     }
 }

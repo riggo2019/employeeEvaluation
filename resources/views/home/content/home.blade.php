@@ -1,6 +1,6 @@
 <div class="container">
 
-    <div id="imageSlider" class="carousel slide my-4" data-bs-ride="carousel">
+    <div id="imageSlider" class="carousel slide my-2" data-bs-ride="carousel">
         <!-- Indicators -->
         <div class="carousel-indicators">
             <button type="button" data-bs-target="#imageSlider" data-bs-slide-to="0" class="active"
@@ -48,7 +48,7 @@
     </div>
 
     <div class="row introduce">
-        <!-- Danh sách mục cần đánh giá -->
+        {{-- <!-- Danh sách mục cần đánh giá -->
         <div class="col-md-6">
             <div class="card no-border">
                 <div class="card-header bg-primary text-white text-center">
@@ -124,27 +124,24 @@
                     </p>
                 </div>
             </div>
-        </div>
-        <div class="container mt-4">
-            <div class="row justify-content-center">
-                <div class="col-md-8">
-                    <div class="info-card d-flex align-items-center p-2">
-                        <!-- Logo App -->
-                        <div class="me-2">
-                            <img src="{{ asset('image/logo2.jpg') }}" alt="Logo App" class="logo">
-                        </div>
-                        <!-- Thông Tin -->
-                        <div>
-                            <h5 class="mb-0">Phòng khám Đa Khoa Quốc tế IMedicare</h5>
-                            <p class="mb-0">Địa chỉ: Tầng 1, TTTM The Garden, Đ. Mễ Trì, P. Mỹ Đình I, Q. Nam Từ Liêm,
-                                Hà Nội
-                            </p>
-                            <p class="mb-0">Liên hệ:</p>
-                            <p class="mb-0">Hotline: 024.3880.3333</p>
-                        </div>
+        </div> --}}
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="info-card d-flex align-items-center p-2">
+                    <!-- Logo App -->
+                    <div class="me-2">
+                        <img src="{{ asset('image/logo2.jpg') }}" alt="Logo App" class="logo">
+                    </div>
+                    <!-- Thông Tin -->
+                    <div>
+                        <h5 class="mb-0">{{ __('messages.company_name') }}</h5>
+                        <p class="mb-0">{{ __('messages.address') }}</p>
+                        <p class="mb-0">{{ __('messages.phone') }}</p>
+                        <p class="mb-0">{{ __('messages.copyright') }}</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <p class="" style="position:fixed;bottom:10px;left:10px;color:#999;">{{ __('messages.dev') }}</p>
 </div>

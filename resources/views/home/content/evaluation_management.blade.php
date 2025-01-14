@@ -7,15 +7,16 @@
             </a>
         @endforeach
     </div>
-    <h2 class="text-center mb-4">Đánh Giá Nhân Viên -
-        {{ $selectedDepartment ? 'Khối: ' . $selectedDepartment->department_name : 'Tất cả' }}</h2>
+    <h2 class="text-center mb-4">{{ __('messages.evaluation_management_title') }}
+        {{ $selectedDepartment->department_name }}</h2>
     <form action="{{ route('storeAdminScores') }}" method="POST">
         @csrf
         <div class="row border bg-light">
-            <div class="col-2 align-self-center text-center p-2">Hạng Mục</div>
+            <div class="col-2 align-self-center text-center p-2">{{ __('messages.category') }}</div>
             <div class="col-10">
                 <div class="row">
-                    <div class="col-5 align-self-center border-start border-end text-center p-2">Tiêu chí</div>
+                    <div class="col-5 align-self-center border-start border-end text-center p-2">
+                        {{ __('messages.question') }}</div>
                     <div class="col-7">
                         <div class="row p-2">
                             @foreach ($employees as $employee)
@@ -51,8 +52,7 @@
                                                         @foreach ($admin_question_scores as $admin_question_score)
                                                             @if ($admin_question_score->question_id == $question->id && $admin_question_score->user_id == $employee->id)
                                                                 value="{{ $admin_question_score->score }}"
-                                                            @endif 
-                                                        @endforeach>
+                                                            @endif @endforeach>
                                                 </div>
                                             @endforeach
                                         </div>
@@ -61,9 +61,8 @@
                             @endforeach
                         </div>
                         <div class="row">
-                            <div class="col-5 d-flex align-items-center border" style="height:100px">ĐIỂM TRUNG BÌNH
-                                THEO
-                                HẠNG MỤC</div>
+                            <div class="col-5 d-flex align-items-center border fw-bold text-primary"
+                                style="height:100px">{{ __('messages.average_score_by_category') }}</div>
                             <div class="col-7">
                                 <div class="row" style="height: 100%">
                                     @foreach ($employees as $employee)
@@ -73,8 +72,7 @@
                                                 @foreach ($admin_scores as $admin_score)
                                                     @if ($admin_score->category_id == $category->id && $admin_score->user_id == $employee->id)
                                                         value="{{ $admin_score->average_score }}"
-                                                    @endif 
-                                                @endforeach
+                                                    @endif @endforeach
                                                 readonly>
                                         </div>
                                     @endforeach
@@ -85,7 +83,7 @@
                 </div>
             @endforeach
         </div>
-        <button class="text-center w-30 btn btn-primary mt-3"type="submit">Lưu điểm đánh giá</button>
+        <button class="text-center w-30 btn btn-primary mt-3"type="submit">{{ __('messages.save') }}</button>
     </form>
 </div>
 <script>
@@ -104,7 +102,11 @@
         $('.point-input').on('click input', function() {
             if (parseInt($(this).val()) < 0 || parseInt($(this).val()) > 100 || isNaN($(this).val())) {
                 $(this).val('');
-                showToast('Chỉ cho phép nhập điểm từ 0 tới 100', 'danger');
+                if ("{{ app()->getLocale() }}" === 'vi') {
+                    showToast('Chỉ cho phép nhập điểm từ 0 đến 100', 'danger', 'vi');
+                } else if ("{{ app()->getLocale() }}" === 'ko') {
+                    showToast('0~100점까지의 점수만 입력할 수 있습니다.', 'danger', 'ko');
+                }
             }
             let total = 0,
                 count = 0;

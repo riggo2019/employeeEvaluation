@@ -12,24 +12,28 @@ class AddUserRequest extends FormRequest
         return true;
     }
 
-     //Validate dữ liệu ở form đăng nhập, đăng kí
+    //Validate dữ liệu ở form đăng nhập, đăng kí
     public function rules(): array
     {
-        return [
+        $rules = [
             'first_name' => 'required',
             'last_name' => 'required',
             'user_name' => 'required',
-            'password' => [
+        ];
+
+        if ($this->has('isChangePassword') && $this->input('isChangePassword')) {
+            $rules['password'] = [
                 'required',
                 'string',
-                'min:6', // Độ dài tối thiểu là 8 ký tự
-                'regex:/[a-z]/', // Phải chứa ít nhất một chữ thường    
+                'min:6',
+                'regex:/[a-z]/', // Phải chứa ít nhất một chữ thường
                 'regex:/[A-Z]/', // Phải chứa ít nhất một chữ hoa
                 'regex:/[0-9]/', // Phải chứa ít nhất một số
                 'confirmed',
-            ],
-            
-        ];
+            ];
+        }
+
+        return $rules;
     }
     public function messages(): array
     {
