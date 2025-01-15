@@ -28,7 +28,7 @@ return [
     'good' => 'Khá',
     'average' => 'Trung bình',
     'poor' => 'Kém',
-    'average' => 'Điểm trung bình',
+    'average_score' => 'Điểm trung bình',
 
     'average_score_by_category' => 'Điểm trung bình theo hạng mục',
 

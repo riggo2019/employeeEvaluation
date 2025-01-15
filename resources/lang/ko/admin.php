@@ -27,7 +27,16 @@ return [
     'next_search' => '다음',
     'employee_role' => '직원',
     'admin_role' => '관리팀',
+    'delete_user_confirm' => '이 사용자를 삭제하시겠습니까?',
 
+    'ranking' => '평가',
+    'no_ranking' => '평가되지 않음',
+    'evaluate' => '분류',
+    'no_evaluate' => '분류되지 않음',
+    'average_point' => '평균 총점',
+    'user_score' => '자기 평가',
+    'admin_score' => '관리의 평가',
+    'category_score' => '각 카테고리별 평균 점수',
     'change_password' => '비밀번호 변경',
     'user_name_input' => '사용자 이름 입력',
     'first_name' => '성, 이름',
@@ -42,4 +51,12 @@ return [
     'save' => '저장',
     'clear' => '다시 입력',
     'back' => '뒤로가기',
+
+    'scoreListByEmployee_tab1' => '인사 평가 종합 표',
+    'scoreListByEmployee_tab2' => '개인 평가 차트',
+    'selectEmployee' => '직원 선발',
+    'Employee_info' => '직원 정보',
+
+    'no_employee' => '이 부서에는 직원이 없습니다!',
+
 ];

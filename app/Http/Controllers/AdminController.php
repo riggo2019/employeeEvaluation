@@ -143,10 +143,10 @@ class AdminController extends Controller
         }
 
         $data['departments'] = DB::table('departments')
-        ->join('department_translations', 'departments.id', '=', 'department_translations.department_id')
-        ->where('department_translations.locale', app()->getLocale())
-        ->select('departments.id', 'department_translations.department_name')
-        ->get();
+            ->join('department_translations', 'departments.id', '=', 'department_translations.department_id')
+            ->where('department_translations.locale', app()->getLocale())
+            ->select('departments.id', 'department_translations.department_name')
+            ->get();
         $data['user'] = $user;
         $data['content'] =  'admin.content.editUsers';
         $data['title'] =  __('admin.employee_manager') . ' > ' . __('admin.edit_employee');
@@ -205,15 +205,15 @@ class AdminController extends Controller
     private function evaluateScore($score)
     {
         if ($score >= 91 && $score <= 100) {
-            return 'Xuất sắc';
+            return __('messages.outstanding');
         } elseif ($score >= 81 && $score <= 90) {
-            return 'Giỏi';
+            return __('messages.very_good');
         } elseif ($score >= 66 && $score <= 80) {
-            return 'Khá';
+            return __('messages.good');
         } elseif ($score >= 51 && $score <= 65) {
-            return 'Trung bình';
+            return __('messages.average');
         } else {
-            return 'Kém';
+            return __('messages.poor');
         }
     }
 
@@ -221,15 +221,38 @@ class AdminController extends Controller
     {
         $departmentId = $request->get('department_id');
 
-        $departments = $this->DepartmentsService->getDepartmentNotAdminList();
-        $employees = $this->UserService->getEmployeeFullInfo();
-        $category_list = $this->CategoriesService->getCategoriesList();
+        $departments = $data['departments'] = DB::table('departments')
+            ->join('department_translations', 'departments.id', '=', 'department_translations.department_id')
+            ->where('department_translations.locale', app()->getLocale())
+            ->where('departments.id', '!=', '5')
+            ->select('departments.id', 'department_translations.department_name')
+            ->get();
+        $employees = DB::table('users')
+            ->join('departments', 'departments.id', '=', 'users.department_id')
+            ->join('department_translations', 'departments.id', '=', 'department_translations.department_id')
+            ->where('department_translations.locale', app()->getLocale())
+            ->select(
+                'users.*',
+                DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS full_name"),
+                'department_translations.department_name',
+                DB::raw("DATE_FORMAT(users.start_date, '%d/%m/%Y') AS formatted_start_date")
+            )->get();
+        $category_list = DB::table('categories')
+            ->join('category_translations', 'categories.id', '=', 'category_translations.category_id')
+            ->where('category_translations.locale', app()->getLocale())
+            ->select('categories.id', 'category_translations.category_name')
+            ->get();
 
         $selectedDepartment = $departments->firstWhere('id', $departmentId);
 
 
         foreach ($category_list as &$category) {
-            $category->questions = $this->QuestionsService->getQuestions($category->id);
+            $category->questions = DB::table('questions')
+                ->join('question_translations', 'questions.id', '=', 'question_translations.question_id')
+                ->where('questions.category_id', '=', $category->id)
+                ->where('question_translations.locale', app()->getLocale())
+                ->select('questions.id', 'question_translations.question_content')
+                ->get();
         }
 
         if ($departmentId) {
@@ -367,7 +390,7 @@ class AdminController extends Controller
         $data['departments'] = $departments;
         $data['employees'] = $employees;
         $data['content'] =  'admin.content.scoreListbyCategory';
-        $data['title'] =  'Tổng hợp bộ phận > ' . $selectedDepartment->department_name;
+        $data['title'] =  __('admin.scoreListbyCategory') . ' > ' . $selectedDepartment->department_name;
         $data['css_files'] = [
             '/css/admin/admin.css',
         ];
@@ -382,32 +405,150 @@ class AdminController extends Controller
     public function scoreListByEmployee(Request $request, $department_id)
     {
         $user_id = $request->get('user_id');
+        $departments = $data['departments'] = DB::table('departments')
+            ->join('department_translations', 'departments.id', '=', 'department_translations.department_id')
+            ->where('department_translations.locale', app()->getLocale())
+            ->where('departments.id', '!=', '5')
+            ->select('departments.id', 'department_translations.department_name')
+            ->get();
+        $employees = DB::table('users')
+            ->join('departments', 'departments.id', '=', 'users.department_id')
+            ->join('department_translations', 'departments.id', '=', 'department_translations.department_id')
+            ->where('department_translations.locale', app()->getLocale())
+            ->select(
+                'users.*',
+                DB::raw("CONCAT(users.first_name, ' ', users.last_name) AS full_name"),
+                'department_translations.department_name',
+                DB::raw("DATE_FORMAT(users.start_date, '%d/%m/%Y') AS formatted_start_date")
+            )
+            ->get();
+        $category_list = DB::table('categories')
+            ->join('category_translations', 'categories.id', '=', 'category_translations.category_id')
+            ->where('category_translations.locale', app()->getLocale())
+            ->select('categories.id', 'category_translations.category_name')
+            ->get();
 
-        $departments = $this->DepartmentsService->getDepartmentNotAdminList();
-        $employees = $this->UserService->getEmployeeFullInfo();
-        $category_list = $this->CategoriesService->getCategoriesList();
+        $selectedDepartment = $departments->firstWhere('id', $department_id);
 
         foreach ($category_list as &$category) {
-            $category->questions = $this->QuestionsService->getQuestions($category->id);
+            $category->questions = DB::table('questions')
+                ->join('question_translations', 'questions.id', '=', 'question_translations.question_id')
+                ->where('questions.category_id', '=', $category->id)
+                ->where('question_translations.locale', app()->getLocale())
+                ->select('questions.id', 'questions.category_id', 'question_translations.question_content')
+                ->get();
         }
+
 
         if ($department_id) {
             $employees = $employees->filter(function ($employee) use ($department_id) {
                 return $employee->department_id == $department_id;
             });
         }
+        // Lặp qua tất cả nhân viên và tính điểm trung bình cho từng người
+        foreach ($employees as $selectedEmployee) {
+            // Lấy dữ liệu từ bảng admin_scores và user_scores
+            $selectedEmployee->admin_scores = DB::table('admin_scores')
+                ->where('admin_scores.user_id', '=', $selectedEmployee->id)
+                ->select('admin_scores.id', 'admin_scores.category_id', 'admin_scores.average_score')
+                ->get();
+
+            $selectedEmployee->user_scores = DB::table('user_scores')
+                ->where('user_scores.user_id', '=', $selectedEmployee->id)
+                ->select('user_scores.id', 'user_scores.category_id', 'user_scores.average_score')
+                ->get();
+
+            $selectedEmployee->admin_question_scores = DB::table('admin_question_scores')
+                ->where('admin_question_scores.user_id', '=', $selectedEmployee->id)
+                ->select('admin_question_scores.id', 'admin_question_scores.question_id', 'admin_question_scores.score')
+                ->get();
+
+            $selectedEmployee->user_question_scores = DB::table('user_question_scores')
+                ->where('user_question_scores.user_id', '=', $selectedEmployee->id)
+                ->select('user_question_scores.id', 'user_question_scores.question_id', 'user_question_scores.score')
+                ->get();
+
+            // Tính điểm trung bình
+            $adminScore = $selectedEmployee->admin_scores->pluck('average_score')->average(); // Tính trung bình từ admin_scores
+            $userScore = $selectedEmployee->user_scores->pluck('average_score')->average(); // Tính trung bình từ user_scores
+
+            if ($adminScore !== null && $userScore !== null) {
+                $selectedEmployee->final_average_score = ($adminScore + $userScore) / 2; // Trung bình cộng của 2 điểm
+            } elseif ($adminScore !== null) {
+                $selectedEmployee->final_average_score = $adminScore; // Chỉ có adminScore
+            } elseif ($userScore !== null) {
+                $selectedEmployee->final_average_score = $userScore; // Chỉ có userScore
+            } else {
+                $selectedEmployee->final_average_score = 0; // Không có cả 2
+            }
+
+            // Tính điểm trung bình cho mỗi category_id
+            $finalScores = [];
+
+            // Lặp qua tất cả category_id trong admin_scores
+            foreach ($selectedEmployee->admin_scores as $adminScore) {
+                $categoryId = $adminScore->category_id;
+
+                // Lấy admin score và user score cho category_id tương ứng
+                $adminCategoryScore = $adminScore->average_score;
+                $userCategoryScore = $selectedEmployee->user_scores->firstWhere('category_id', $categoryId)->average_score ?? null;
+
+                // Tính điểm trung bình cho từng category_id
+                if ($adminCategoryScore !== null && $userCategoryScore !== null) {
+                    $finalScores[$categoryId] = ($adminCategoryScore + $userCategoryScore) / 2;
+                } elseif ($adminCategoryScore !== null) {
+                    $finalScores[$categoryId] = $adminCategoryScore;
+                } elseif ($userCategoryScore !== null) {
+                    $finalScores[$categoryId] = $userCategoryScore;
+                } else {
+                    $finalScores[$categoryId] = 0;
+                }
+            }
+
+            // Gán điểm trung bình vào đối tượng
+            $selectedEmployee->final_average_scores = $finalScores;
+            $selectedEmployee->grade = $this->evaluateScore($selectedEmployee->final_average_score);
+
+            // Sắp xếp nhân viên theo final_average_score giảm dần
+            $employees = $employees->sortByDesc('final_average_score');
+
+            // Xếp hạng cho từng nhân viên
+            $rank = 1;
+            foreach ($employees as $selectedEmployee) {
+                $selectedEmployee->rank = $rank++; // Gán thứ hạng cho nhân viên
+            }
+        }
+
 
         if ($user_id) {
             $selectedEmployee = $employees->filter(function ($employee) use ($user_id) {
                 return $employee->id == $user_id;
-            });
+            })->first(); // Lấy đối tượng đầu tiên
         }
+
+
 
         $data['selectedEmployee'] = $selectedEmployee ?? [];
         $data['employees'] = $employees;
         $data['departments'] = $departments;
         $data['category_list'] = $category_list;
+        // print_r(json_encode($data['selectedEmployee']['admin_scores']));
+        // exit;
 
-        dd($data);
+        $data['selectedDepartment'] = $selectedDepartment;
+        $data['selectedDepartmentId'] = $department_id;
+        $data['selectedUserId'] = $user_id ?? null;
+        $data['content'] =  'admin.content.scoreListByEmployee';
+        $data['title'] =  __('admin.scoreListByEmployee') . ' > ' . $selectedDepartment->department_name;
+        $data['css_files'] = [
+            '/css/admin/admin.css',
+        ];
+        $data['js_files'] = [
+            '/js/admin/scoresList.js',
+        ];
+        // print_r(json_encode($usersWithScores));
+        // exit();
+        // dd($data);
+        return view('admin/index', $data);
     }
 }

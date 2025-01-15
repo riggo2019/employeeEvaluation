@@ -38,10 +38,10 @@
             <a href="javascript::void(0)" class="dash-nav-item dash-nav-dropdown-toggle">
                 <i class="fas fa-user"></i></i>{{ __('admin.scoreListByEmployee') }}</a>
             <div class="dash-nav-dropdown-menu">
-                <a href="{{ route('admin.scoreListByEmployee', ['department_id' => 1, 'user_id' => 7]) }}" class="dash-nav-dropdown-item">{{ __('admin.department_1') }}</a>
-                <a href="user-add.html" class="dash-nav-dropdown-item">{{ __('admin.department_2') }}</a>
-                <a href="user-add.html" class="dash-nav-dropdown-item">{{ __('admin.department_3') }}</a>
-                <a href="user-add.html" class="dash-nav-dropdown-item">{{ __('admin.department_4') }}</a>
+                <a href="{{ route('admin.scoreListByEmployee', ['department_id' => 1]) }}" class="dash-nav-dropdown-item">{{ __('admin.department_1') }}</a>
+                <a href="{{ route('admin.scoreListByEmployee', ['department_id' => 2]) }}" class="dash-nav-dropdown-item">{{ __('admin.department_2') }}</a>
+                <a href="{{ route('admin.scoreListByEmployee', ['department_id' => 3]) }}" class="dash-nav-dropdown-item">{{ __('admin.department_3') }}</a>
+                <a href="{{ route('admin.scoreListByEmployee', ['department_id' => 4]) }}" class="dash-nav-dropdown-item">{{ __('admin.department_4') }}</a>
             </div>
         </div>
         <a href="{{ route('logout') }}" class="dash-nav-item logout-option">

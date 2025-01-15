@@ -35,7 +35,7 @@
                                 <td class="text-center">{{ $user->formatted_start_date }}</td>
                                 <td class="text-center">
                                     <a href="{{ route('admin.editUsers', ['id' => $user->id]) }}" class="btn btn-success"><i class="fas fa-edit"></i></a>
-                                    <form action="{{ route('admin.deleteUser', ['id' => $user->id]) }}" method="POST" onsubmit="return confirm('Bạn chắc chắn muốn xóa người dùng này?');" style="display: inline;">
+                                    <form action="{{ route('admin.deleteUser', ['id' => $user->id]) }}" method="POST" onsubmit="return confirm('{{ __('admin.delete_user_confirm') }}');" style="display: inline;">
                                         @csrf
                                         <button type="submit" class="btn btn-danger"><i class="fas fa-trash"></i></button>
                                     </form>
@@ -48,3 +48,4 @@
         </div>
     </div>
 </div>
+<script>var locale = '{{ app()->getLocale() }}';</script>

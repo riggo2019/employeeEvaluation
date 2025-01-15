@@ -12,7 +12,8 @@
 <link rel="stylesheet" href="{{ asset("/css/bootstrap/bootstrap.min.css") }}">
 <link rel="stylesheet" href="{{ asset("/lib/jquery.dataTables.min.css") }}">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment-with-locales.min.js"></script>
-        
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 @if (isset($css_files))
     @foreach ($css_files as $css)
         <link rel="stylesheet" href="{{ asset("$css") }}">
