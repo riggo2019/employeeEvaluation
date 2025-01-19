@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Services\QuestionsService;
@@ -118,9 +119,15 @@ class AdminController extends Controller
         }
         $data['password'] = Hash::make(request('password'));
         if (UserModel::create($data)) {
-            return redirect()->route('admin.users')->with('success', 'Thêm nhân viên thành công.');
+            return redirect()->route('admin.users')->with([
+                'message' => __('toast.add_user_success'),
+                'type' => 'success'
+            ]);
         } else {
-            return redirect()->route('admin.addUsers')->with('error', 'Thêm nhân viên thất bại');
+            return redirect()->route('admin.addUsers')->with([
+                'message' => __('toast.add_user_failed'),
+                'type' => 'error'
+            ]);
         }
     }
 
@@ -178,9 +185,15 @@ class AdminController extends Controller
 
         if ($user) {
             $user->update($data);
-            return redirect()->route('admin.users')->with('success', 'Thêm nhân viên thành công.');
+            return redirect()->route('admin.users')->with([
+                'message' => __('toast.edit_user_success'),
+                'type' => 'success'
+            ]);
         } else {
-            return redirect()->back()->with('error', 'Người dùng không tồn tại.');
+            return redirect()->back()->with([
+                'message' => __('toast.cant_find_user'),
+                'type' => 'error'
+            ]);
         }
     }
 
@@ -188,32 +201,48 @@ class AdminController extends Controller
     {
         // Tìm user theo ID
         $user = UserModel::find($id);
+        $logged_id = Auth::user()->id;
 
         // Kiểm tra nếu user tồn tại
         if ($user) {
-            // Xóa user
-            $user->delete();
+            if ($user->id != $logged_id) {
+                // Xóa user
+                $user->delete();
 
-            // Thông báo thành công
-            return redirect()->route('admin.users')->with('success', 'Xóa nhân viên thành công.');
+
+                // Thông báo thành công
+                return redirect()->route('admin.users')->with([
+                    'message' => __('toast.delete_user_success'),
+                    'type' => 'success'
+                ]);
+            } else {
+                // Nếu xóa user đang đang đăng nhập, thông báo l��i
+                return redirect()->route('admin.users')->with([
+                    'message' => __('toast.cant_delete_yourself'),
+                    'type' => 'error'
+                ]);
+            }
         } else {
             // Nếu không tìm thấy user, thông báo lỗi
-            return redirect()->route('admin.users')->with('error', 'Người dùng không tồn tại.');
+            return redirect()->route('admin.users')->with([
+                'message' => __('toast.cant_find_user'),
+                'type' => 'error'
+            ]);
         }
     }
 
     private function evaluateScore($score)
     {
         if ($score >= 91 && $score <= 100) {
-            return __('messages.outstanding');
+            return __('toast.outstanding');
         } elseif ($score >= 81 && $score <= 90) {
-            return __('messages.very_good');
+            return __('toast.very_good');
         } elseif ($score >= 66 && $score <= 80) {
-            return __('messages.good');
+            return __('toast.good');
         } elseif ($score >= 51 && $score <= 65) {
-            return __('messages.average');
+            return __('toast.average');
         } else {
-            return __('messages.poor');
+            return __('toast.poor');
         }
     }
 

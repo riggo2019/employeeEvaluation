@@ -33,15 +33,20 @@ class AuthController extends Controller
         $credentials = request()->all('user_name', 'password'); 
         if (Auth::attempt($credentials)) {
             if (Auth::user()->is_admin == 1) {
-                Session::put('message', 'Bạn đã đăng nhập với tư cách quản trị viên.');
-                Session::put('type', 'error');
-                return redirect()->route('admin.index');
+                return redirect()->route('admin.index')->with([
+                    'message' => __('toast.logged_admin'),
+                    'type' => 'success'
+                ]);
             }
-            return redirect()->route('home.index')->with('success', 'Đăng nhập thành công');
+            return redirect()->route('home.index')->with([
+                'message' => __('toast.logged_in'),
+                'type' => 'success'
+            ]);
         } else {
-            Session::put('message', 'Mật khẩu không chính xác.');
-            Session::put('type', 'error');
-            return redirect()->route('auth.login')->with('error', 'Mật khẩu không chính xác.');
+            return redirect()->route('auth.login')->with([
+                'message' => __('toast.password_wrong'),
+                'type' => 'error'
+            ]);
         }
     }
     
@@ -56,14 +61,21 @@ class AuthController extends Controller
                 'password' => $data['password']
             ];
             if (Auth::attempt($credentials)) {
-                Session::put('message', 'Đăng nhập thành công');
-                Session::put('type', 'success');
-                return redirect()->route('home.index');
+                return redirect()->route('home.index')->with([
+                    'message' => __('toast.logged_in'),
+                    'type' => 'success'
+                ]);
             } else {
-                return redirect()->route('auth.login')->with('error', 'Tên đăng nhập hoặc mật khẩu không đúng.');
+                return redirect()->route('auth.login')->with([
+                    'message' => __('toast.user_pass_wrong'),
+                    'type' => 'error'
+                ]);
             }
         } else {
-            return redirect()->route('auth.register')->with('error', 'Đăng ký tài khoản thất bại');
+            return redirect()->route('auth.register')->with([
+                'message' => __('toast.register_fail'),
+                'type' => 'error'
+            ]);
         }
     }
 
@@ -73,8 +85,9 @@ class AuthController extends Controller
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-        Session::put('message', 'Đăng xuất thành công');
-        Session::put('type', 'success');
-        return redirect()->route('home.index');
+        return redirect()->route('home.index')->with([
+            'message' => __('toast.logged_out'),
+            'type' => 'success'
+        ]);
     }
 }
